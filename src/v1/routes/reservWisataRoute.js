@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const reservRoute = require("../controllers/reservWisataController");
+const reservRoute = require("../../controllers/reservWisataController");
 
 router.get("/", reservRoute.getAllReservWisata);
 router.get("/:id", reservRoute.getOneReservWisata);

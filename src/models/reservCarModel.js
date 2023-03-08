@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const ReservasiMobil = new Schema({
+const ReservCarSchema = new Schema({
   namaReservant: {
     type: String,
     required: true,
@@ -17,4 +17,29 @@ const ReservasiMobil = new Schema({
     required: true,
     maxlength: 30,
   },
+  tanggalMulai: {
+    type: Date,
+    required: true,
+  },
+  waktuJemput: {
+    type: Date,
+    required: true,
+  },
+  lokasiAntar: {
+    type: String,
+    required: true,
+    maxlength: 300,
+  },
+  unitID: {
+    type: mongoose.Types.ObjectId,
+    required: true,
+    ref: "rentalCar",
+  },
+  pesananTambahan: {
+    type: String,
+    required: false,
+    maxlength: 300,
+  },
 });
+
+module.exports = mongoose.model("reservCar", ReservCarSchema);

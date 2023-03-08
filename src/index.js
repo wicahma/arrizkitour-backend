@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+
 require("dotenv").config();
 
 const MongoDB = require("./config/db");
@@ -13,10 +14,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-app.use("/paket-wisata", wisataRouter);
-app.use("/sewa-mobil", carRouter);
-app.use("/reservasi-wisata", reservWisataRouter);
-// app.use("/v1/reservasi-car", reservCarRouter);
+app.use("/api/v1/paket-wisata", wisataRouter);
+app.use("/api/v1/sewa-mobil", carRouter);
+app.use("/api/v1/reservasi-wisata", reservWisataRouter);
+// app.use("/api/v1/reservasi-car", reservCarRouter);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);

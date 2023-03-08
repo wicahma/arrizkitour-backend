@@ -5,6 +5,7 @@ const carSchema = mongoose.Schema(
     unitName: {
       type: String,
       required: true,
+      maxlength: 100,
     },
     seat: {
       type: Number,
@@ -20,4 +21,4 @@ const carSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("rentCar", carSchema);
+module.exports = mongoose.model("rentalCar", carSchema);

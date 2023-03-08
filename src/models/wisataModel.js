@@ -12,4 +12,4 @@ const wisataSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model("wisataPacket", wisataSchema);
+module.exports = mongoose.model("paketWisata", wisataSchema);
