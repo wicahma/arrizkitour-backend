@@ -5,7 +5,7 @@ const ReservWisataSchema = new Schema({
   wisataID: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "wisataPacket",
+    ref: "paketWisata",
   },
   namaResevant: {
     type: String,
