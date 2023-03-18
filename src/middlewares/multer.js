@@ -15,7 +15,11 @@ const multers = multer({
 
 const deleteFile = (filePath) => {
   fs.unlink(filePath, (err) => {
-    console.log(err);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("File deleted");
+    }
   });
 };
 

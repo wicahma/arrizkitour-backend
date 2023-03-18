@@ -3,8 +3,8 @@ const router = express.Router();
 const reservRoute = require("../../controllers/reservWisataController");
 
 router.get("/", reservRoute.getAllReservWisata);
-router.get("/:wisataId", reservRoute.getOneReservWisata);
+router.get("/:id", reservRoute.getOneReservWisata);
 router.post("/", reservRoute.createReservWisata);
-router.delete("/:wisataId", reservRoute.deleteOneReservWisata);
+router.delete("/:id", reservRoute.deleteOneReservWisata);
 
 module.exports = router;

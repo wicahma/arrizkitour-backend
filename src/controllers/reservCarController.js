@@ -29,41 +29,13 @@ const getOneReserv = async (req, res) => {
 };
 
 const createNewReserv = async (req, res) => {
-  const {
-    namaReservant,
-    phoneNumber,
-    email,
-    tanggalMulai,
-    waktuJemput,
-    lokasiAntar,
-    unitId,
-    pesananTambahan,
-  } = req.body;
-
-  if (
-    !namaReservant ||
-    !phoneNumber ||
-    !email ||
-    !tanggalMulai ||
-    !waktuJemput ||
-    !lokasiAntar ||
-    !unitId ||
-    !pesananTambahan
-  )
-    res.status(400).json({ error: "Salah inputan tidak ada atau kosong" });
-
-  const newReserv = new reservCar({
-    namaReservant,
-    phoneNumber,
-    email,
-    tanggalMulai,
-    waktuJemput,
-    lokasiAntar,
-    unitId,
-    pesananTambahan,
-  });
+  const newReservData = { ...req.body };
 
   try {
+    const newReserv = new reservCar({
+      ...newReservData,
+    });
+
     const savedReserv = await newReserv.save();
     res.status(201).json({ data: savedReserv });
   } catch (err) {

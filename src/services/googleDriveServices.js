@@ -8,11 +8,11 @@ const getAuthenticate = () => {
     key: process.env.PRIVATE_KEY.replace(/\\n/g, "\n"),
     scopes: "https://www.googleapis.com/auth/drive",
   });
-  return google.drive({ version: "v3", auth });
+  return auth;
 };
 
 const uploadImageToDrive = async (file, auth, fileName) => {
-  const driveService = auth;
+  const driveService = google.drive({ version: "v3", auth });
 
   const fileMetadata = {
     name: file.originalname,
@@ -32,7 +32,7 @@ const uploadImageToDrive = async (file, auth, fileName) => {
 };
 
 const deleteImageFromDrive = async (fileId, auth) => {
-  const driveService = auth;
+  const driveService = google.drive({ version: "v3", auth });
   try {
     const response = await driveService.files.delete({
       fileId: fileId,

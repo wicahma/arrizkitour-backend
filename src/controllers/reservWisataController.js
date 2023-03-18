@@ -12,9 +12,9 @@ const getAllReservWisata = async (req, res) => {
 };
 
 const getOneReservWisata = async (req, res) => {
-  const { wisataId } = req.params;
+  const { id } = req.params;
   try {
-    const oneReserv = await reservWisata.find(wisataId).populate({
+    const oneReserv = await reservWisata.find(id).populate({
       path: "wisataId",
     });
     if (!oneReserv) {
@@ -27,19 +27,25 @@ const getOneReservWisata = async (req, res) => {
   }
 };
 
-const createReservWisata = (req, res) => {
-  // const reservasi = reservWisata.create({
-  //   wisataID: req.body.wisataID,
-  // });
-  // reservasi.then((result) => {
-  //   res.status(201).json(result);
-  // });
+const createReservWisata = async (req, res) => {
+  const newReservData = { ...req.body };
+
+  try {
+    const newReserv = new reservWisata({
+      ...newReservData,
+    });
+    const savedReserv = await newReserv.save();
+
+    return res.status(201).json({ data: savedReserv });
+  } catch (err) {
+    res.status(500).json({ error: err?.message || err });
+  }
 };
 
 const deleteOneReservWisata = async (req, res) => {
-  const { wisataId } = req.params;
+  const { id } = req.params;
   try {
-    const deletedReserv = await reservCar.findByIdAndDelete(wisataId);
+    const deletedReserv = await reservCar.findByIdAndDelete(id);
     if (!deletedReserv) {
       res.status(404).json({ error: "Data tidak ditemukan." });
       return;
