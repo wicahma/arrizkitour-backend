@@ -4,16 +4,20 @@ const carSchema = mongoose.Schema(
   {
     unitName: {
       type: String,
-      required: true,
+      required: [true, "unitName tidak boleh kosong!"],
       maxlength: 100,
     },
     seat: {
       type: Number,
-      required: true,
+      required: [true, "Seat tidak boleh kosong!"],
     },
     pricePerDay: {
       type: Number,
-      required: true,
+      required: [true, "pricePerDay tidak boleh kosong!"],
+    },
+    gambar: {
+      type: String,
+      required: [true, "Gambar tidak boleh kosong!"],
     },
   },
   {
@@ -21,4 +25,4 @@ const carSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("rentalCar", carSchema);
+module.exports = mongoose.model("car", carSchema);

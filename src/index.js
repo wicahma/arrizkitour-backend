@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const { multers } = require("./middlewares/multer");
 
 require("dotenv").config();
 
@@ -14,6 +15,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
+app.use(multers.single("gambar"));
+
 app.use("/api/v1/paket-wisata", wisataRouter);
 app.use("/api/v1/sewa-mobil", carRouter);
 app.use("/api/v1/reservasi-wisata", reservWisataRouter);

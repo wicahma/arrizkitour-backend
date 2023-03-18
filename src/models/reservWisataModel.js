@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ReservWisataSchema = new Schema({
-  wisataID: {
+  wisataId: {
     type: mongoose.Types.ObjectId,
     required: true,
     ref: "paketWisata",

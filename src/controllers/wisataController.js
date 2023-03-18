@@ -32,7 +32,7 @@ const updateOneWisata = (req, res) => {
 };
 
 const deleteOneWisata = (req, res) => {
-  res.send("Delete One Wisata");
+  const { wisataId } = req.params;
 };
 
 module.exports = {
