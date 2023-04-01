@@ -26,7 +26,7 @@ const paketSchema = new Schema({
     type: [String],
     required: true,
   },
-  Pax: {
+  pax: {
     type: [paxSchema],
     required: true,
   },
@@ -45,6 +45,7 @@ const wisataSchema = new Schema(
     namaPaket: {
       type: String,
       required: true,
+      maxlength: [100, "Nama Paket harus kurang dari 100 karakter kata!"],
     },
     jenisPaket: [paketSchema],
   },

@@ -22,6 +22,8 @@ const getAllCar = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR - GET ONE CAR
 const getOneCar = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);
@@ -31,7 +33,6 @@ const getOneCar = expressAsyncHandler(async (req, res) => {
       stack: isError.errors,
     };
   }
-  const { id } = req.params;
 
   try {
     const findOneCar = await car.findById(id);
@@ -48,11 +49,10 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
   // const auth = getAuthenticate();
   const { nama, harga, seat } = req.body;
   console.log(req.file);
+
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
-    setTimeout(() => {
-      deleteFile(req.file.path);
-    }, 2000);
+    deleteFile(req.file.path);
     res.status(400);
     throw {
       name: "Validation Error",
@@ -99,6 +99,16 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
 const updateOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   const { nama, harga, seat } = req.body;
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
     const updatedCar = await car.findByIdAndUpdate(
@@ -173,6 +183,16 @@ const updateImageCar = expressAsyncHandler(async (req, res) => {
 // ANCHOR - DELETE ONE CAR
 const deleteOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
     // const auth = getAuthenticate();
