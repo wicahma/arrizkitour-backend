@@ -4,15 +4,16 @@ const { multers } = require("./src/middlewares/multer");
 const mainRoute = "/api/v1/";
 require("dotenv").config();
 const MongoDB = require("./src/config/db");
-const { errorHandler } = require("./src/middlewares/errorhandler");
+const { errorHandler } = require("./src/middlewares/errorHandler");
 
 MongoDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
-app.use(multers.single("gambar"));
+app.use(express.static('public')); 
 
+app.use('/images', express.static('images'));
 app.use(`${mainRoute}car`, require("./src/routes/v1/carRoute"));
 app.use(`${mainRoute}wisata`, require("./src/routes/v1/wisataRoute"));
 app.use(`${mainRoute}res-car`, require("./src/routes/v1/reservCarRoute"));

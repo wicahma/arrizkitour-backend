@@ -53,4 +53,4 @@ const wisataSchema = new Schema(
   }
 );
 
-module.exports = mongoose.model("paketWisata", wisataSchema);
+module.exports = mongoose.model("wisata", wisataSchema);

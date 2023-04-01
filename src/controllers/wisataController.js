@@ -1,10 +1,10 @@
-const wisataPacket = require("../models/wisataModel");
+const wisata = require("../models/wisataModel");
 
 
 // ANCHOR Get All Wisata
 const getAllWisata = async (req, res) => {
   try {
-    const allWisata = await wisataPacket.find();
+    const allWisata = await wisata.find();
     res.status(200).json({ data: allWisata });
   } catch (err) {
     res.status(500).json({ error: err?.message || err });
@@ -15,7 +15,7 @@ const getAllWisata = async (req, res) => {
 const getOneWisata = async (req, res) => {
   const { id } = req.params;
   try {
-    const findOneWisata = await wisataPacket.findById(id);
+    const findOneWisata = await wisata.findById(id);
     if (!findOneWisata)
       return res.status(404).json({ error: "Data tidak ditemukan" });
     res.status(200).json({ data: findOneWisata });
@@ -29,7 +29,7 @@ const createNewWisata = async (req, res) => {
   const newWisataData = { ...req.body };
 
   try {
-    const wisata = new wisataPacket({
+    const wisata = new wisata({
       ...newWisataData,
     });
     const saveWisata = await wisata.save();
@@ -45,7 +45,7 @@ const updateOneWisata = async (req, res) => {
   const { id } = req.params;
   const updateWisataData = { ...req.body };
   try {
-    const updateWisata = await wisataPacket.findByIdAndUpdate(
+    const updateWisata = await wisata.findByIdAndUpdate(
       id,
       updateWisataData,
       { new: true }
@@ -64,7 +64,7 @@ const updateOneWisata = async (req, res) => {
 const deleteOneWisata = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedWisata = await wisataPacket.findByIdAndDelete(id);
+    const deletedWisata = await wisata.findByIdAndDelete(id);
     if (!deletedWisata) {
       res.status(404).json({ error: "Data tidak ditemukan." });
       return;

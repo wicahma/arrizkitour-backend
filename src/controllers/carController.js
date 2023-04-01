@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const { deleteFile } = require("../middlewares/multer.js");
-const rentalCar = require("../models/carModel.js");
+const car = require("../models/carModel.js");
 const {
   uploadImageToDrive,
   deleteImageFromDrive,
@@ -12,7 +12,7 @@ require("dotenv").config();
 // ANCHOR - GET ALL CAR
 const getAllCar = expressAsyncHandler(async (req, res) => {
   try {
-    const allCar = await rentalCar.find();
+    const allCar = await car.find();
     res.status(200).json({ data: allCar });
   } catch {
     if (!res.status) res.status(500);
@@ -34,7 +34,7 @@ const getOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
 
   try {
-    const findOneCar = await rentalCar.findById(id);
+    const findOneCar = await car.findById(id);
     if (!findOneCar) res.status(404).json({ error: "Data tidak ditemukan" });
     res.status(200).json({ data: findOneCar });
   } catch (err) {
@@ -45,27 +45,50 @@ const getOneCar = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR - CREATE NEW CAR
 const createNewCar = expressAsyncHandler(async (req, res) => {
-  const auth = getAuthenticate();
-  const newRentalCar = { ...req.body };
+  // const auth = getAuthenticate();
+  const { nama, harga, seat } = req.body;
+  console.log(req.file);
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    setTimeout(() => {
+      deleteFile(req.file.path);
+    }, 2000);
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "File tidak terinput" });
+      res.status(400);
+      throw new Error("File tidak terinput!");
     }
 
-    const response = await uploadImageToDrive(
-      req.file,
-      auth,
-      process.env.CAR_FOLDER_ID
-    );
-    newRentalCar.imageId = response.data.id;
-    deleteFile(req.file.path);
+    // const response = await uploadImageToDrive(
+    //   req.file,
+    //   auth,
+    //   process.env.CAR_FOLDER_ID
+    // );
+    // newCar.imageId = response.data.id;
 
-    const rentalCarData = new rentalCar({
-      ...newRentalCar,
+    const newCar = await car.create({
+      unitName: nama,
+      seat: seat,
+      pricePerDay: harga,
+      imageId: req.file.filename,
     });
-    const saveRentalCar = await rentalCarData.save();
-    res.status(201).json({ data: saveRentalCar });
+
+    res.status(201).json({
+      message: "Car Data Created!",
+      data: newCar,
+    });
+
+    // setTimeout(() => {
+    //   deleteFile(req.file.path);
+    // }, 3000);
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -75,14 +98,72 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
 // ANCHOR - UPDATE ONE CAR
 const updateOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-  const updateCarData = { ...req.body };
+  const { nama, harga, seat } = req.body;
 
   try {
-    const updatedCar = await rentalCar.findByIdAndUpdate(id, updateCarData, {
-      new: true,
-    });
-    if (!updatedCar) res.status(404).json({ error: "Data tidak ditemukan" });
+    const updatedCar = await car.findByIdAndUpdate(
+      id,
+      {
+        unitName: nama,
+        seat: seat,
+        pricePerDay: harga,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!updatedCar) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
     res.status(200).json({ data: updatedCar });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+const updateImageCar = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  // const auth = getAuthenticate();
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
+
+  try {
+    if (!req.file) {
+      res.status(400);
+      throw new Error("File tidak terinput!");
+    }
+    const findCar = await car.findById(id);
+    req.file &&
+      deleteFile(`${__dirname}/../../public/images/${findCar.imageId}`);
+
+    const updatedCar = await car.findByIdAndUpdate(
+      id,
+      {
+        imageId: req.file.filename,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!updatedCar) {
+      deleteFile(req.file.path);
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
+
+    res.status(200).json({
+      message: "Image Updated!",
+      data: updatedCar,
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -94,14 +175,21 @@ const deleteOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
 
   try {
-    const auth = getAuthenticate();
+    // const auth = getAuthenticate();
 
-    const deletedCar = await rentalCar.findByIdAndDelete(id);
-    if (!deletedCar)
-      return res.status(404).json({ error: "Data tidak ditemukan." });
-    await deleteImageFromDrive(deletedCar.imageId, auth);
+    const deletedCar = await car.findByIdAndDelete(id);
+    if (!deletedCar) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan, delete gagal!");
+    }
 
-    res.json("Data Berhasil dihapus.");
+    console.log(deletedCar);
+
+    deleteFile(`${__dirname}/../../public/images/${deletedCar.imageId}`);
+
+    // await deleteImageFromDrive(deletedCar.imageId, auth);
+
+    res.status(200).json({ message: "Data berhasil dihapus!" });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -115,4 +203,5 @@ module.exports = {
   createNewCar,
   updateOneCar,
   deleteOneCar,
+  updateImageCar,
 };
