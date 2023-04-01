@@ -1,5 +1,7 @@
 const wisataPacket = require("../models/wisataModel");
 
+
+// ANCHOR Get All Wisata
 const getAllWisata = async (req, res) => {
   try {
     const allWisata = await wisataPacket.find();
@@ -9,6 +11,7 @@ const getAllWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Get One Wisata
 const getOneWisata = async (req, res) => {
   const { id } = req.params;
   try {
@@ -21,6 +24,7 @@ const getOneWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Create New Wisata
 const createNewWisata = async (req, res) => {
   const newWisataData = { ...req.body };
 
@@ -36,6 +40,7 @@ const createNewWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Update One Wisata
 const updateOneWisata = async (req, res) => {
   const { id } = req.params;
   const updateWisataData = { ...req.body };
@@ -55,6 +60,7 @@ const updateOneWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Delete One Wisata
 const deleteOneWisata = async (req, res) => {
   const { id } = req.params;
   try {
@@ -69,6 +75,7 @@ const deleteOneWisata = async (req, res) => {
   }
 };
 
+// ANCHOR EXPORT MODULE
 module.exports = {
   getAllWisata,
   getOneWisata,

@@ -1,7 +1,8 @@
 const { model } = require("mongoose");
 const reservCar = require("../models/reservCarModel");
 
-const getAllReserv = async (req, res) => {
+// ANCHOR Get All Reserv Car
+const getAllReservCar = async (req, res) => {
   try {
     const allReserv = await reservCar.find().populate({
       path: "unitId",
@@ -12,7 +13,8 @@ const getAllReserv = async (req, res) => {
   }
 };
 
-const getOneReserv = async (req, res) => {
+// ANCHOR Get One Reserv Car
+const getOneReservCar = async (req, res) => {
   const { id } = req.params;
   try {
     const oneReserv = await reservCar.findById(id).populate({
@@ -28,7 +30,8 @@ const getOneReserv = async (req, res) => {
   }
 };
 
-const createNewReserv = async (req, res) => {
+// ANCHOR Create New Reserv Car
+const createNewReservCar = async (req, res) => {
   const newReservData = { ...req.body };
 
   try {
@@ -43,7 +46,8 @@ const createNewReserv = async (req, res) => {
   }
 };
 
-const deleteOneReserv = async (req, res) => {
+// ANCHOR Delete One Reserv Car
+const deleteOneReservCar = async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservCar.findByIdAndDelete(id);
@@ -57,9 +61,10 @@ const deleteOneReserv = async (req, res) => {
   }
 };
 
+// ANCHOR EXPORT MODULE
 module.exports = {
-  getAllReserv,
-  getOneReserv,
-  createNewReserv,
-  deleteOneReserv,
+  getAllReservCar,
+  getOneReservCar,
+  createNewReservCar,
+  deleteOneReservCar,
 };

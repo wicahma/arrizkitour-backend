@@ -1,3 +1,4 @@
+const { validationResult } = require("express-validator");
 const { deleteFile } = require("../middlewares/multer.js");
 const rentalCar = require("../models/carModel.js");
 const {
@@ -5,18 +6,31 @@ const {
   deleteImageFromDrive,
   getAuthenticate,
 } = require("../services/googleDriveServices.js");
+const expressAsyncHandler = require("express-async-handler");
 require("dotenv").config();
 
-const getAllCar = async (req, res) => {
+// ANCHOR - GET ALL CAR
+const getAllCar = expressAsyncHandler(async (req, res) => {
   try {
     const allCar = await rentalCar.find();
     res.status(200).json({ data: allCar });
   } catch {
-    res.status(500).json({ error: error?.message || error });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const getOneCar = async (req, res) => {
+// ANCHOR - GET ONE CAR
+const getOneCar = expressAsyncHandler(async (req, res) => {
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
   const { id } = req.params;
 
   try {
@@ -24,11 +38,13 @@ const getOneCar = async (req, res) => {
     if (!findOneCar) res.status(404).json({ error: "Data tidak ditemukan" });
     res.status(200).json({ data: findOneCar });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const createNewCar = async (req, res) => {
+// ANCHOR - CREATE NEW CAR
+const createNewCar = expressAsyncHandler(async (req, res) => {
   const auth = getAuthenticate();
   const newRentalCar = { ...req.body };
 
@@ -51,11 +67,13 @@ const createNewCar = async (req, res) => {
     const saveRentalCar = await rentalCarData.save();
     res.status(201).json({ data: saveRentalCar });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const updateOneCar = async (req, res) => {
+// ANCHOR - UPDATE ONE CAR
+const updateOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   const updateCarData = { ...req.body };
 
@@ -65,14 +83,14 @@ const updateOneCar = async (req, res) => {
     });
     if (!updatedCar) res.status(404).json({ error: "Data tidak ditemukan" });
     res.status(200).json({ data: updatedCar });
-  } catch (error) {
-    return res
-      .status(error?.status || 500)
-      .json({ error: error?.message || error });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const deleteOneCar = async (req, res) => {
+// ANCHOR - DELETE ONE CAR
+const deleteOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -85,10 +103,12 @@ const deleteOneCar = async (req, res) => {
 
     res.json("Data Berhasil dihapus.");
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
+// ANCHOR - EXPORT MODULE
 module.exports = {
   getAllCar,
   getOneCar,

@@ -1,26 +1,24 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const { multers } = require("./middlewares/multer");
-
+const mainRoute = "/api/v1/";
 require("dotenv").config();
-
 const MongoDB = require("./config/db");
-const carRouter = require("./v1/routes/CarRoute");
-const wisataRouter = require("./v1/routes/wisataRoute");
-const reservWisataRouter = require("./v1/routes/reservWisataRoute");
-const reservCarRouter = require("./v1/routes/reservCarRoute");
+const { errorHandler } = require("./middlewares/errorhandler");
 
 MongoDB();
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(multers.single("gambar"));
 
-app.use("/api/v1/paket-wisata", wisataRouter);
-app.use("/api/v1/sewa-mobil", carRouter);
-app.use("/api/v1/reservasi-wisata", reservWisataRouter);
-app.use("/api/v1/reservasi-car", reservCarRouter);
+app.use(`${mainRoute}car`, require("./routes/v1/carRoute"));
+app.use(`${mainRoute}wisata`, require("./routes/v1/wisataRoute"));
+app.use(`${mainRoute}res-car`, require("./routes/v1/reservCarRoute"));
+app.use(`${mainRoute}res-wisata`, require("./routes/v1/reservWisataRoute"));
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
