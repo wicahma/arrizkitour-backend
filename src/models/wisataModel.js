@@ -17,25 +17,24 @@ const paxSchema = new Schema(
   }
 );
 
-const paketSchema = new Schema(
-  {
-    rundown: {
-      type: Array,
-      required: true,
-    },
-    tempatWisata: {
-      type: Array,
-      required: true,
-    },
-    Pax: {
-      type: [paxSchema],
-      required: true,
-    },
+const paketSchema = new Schema({
+  rundown: {
+    type: [String],
+    required: true,
   },
-  {
-    _id: false,
-  }
-);
+  tempatWisata: {
+    type: [String],
+    required: true,
+  },
+  pax: {
+    type: [paxSchema],
+    required: true,
+  },
+  images: {
+    type: [String],
+    required: true,
+  },
+});
 
 const wisataSchema = new Schema(
   {
@@ -43,11 +42,16 @@ const wisataSchema = new Schema(
       type: Array,
       required: true,
     },
-    jenisPaket: paketSchema,
+    namaPaket: {
+      type: String,
+      required: true,
+      maxlength: [100, "Nama Paket harus kurang dari 100 karakter kata!"],
+    },
+    jenisPaket: [paketSchema],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("paketWisata", wisataSchema);
+module.exports = mongoose.model("wisata", wisataSchema);

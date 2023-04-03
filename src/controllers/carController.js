@@ -1,98 +1,227 @@
+const { validationResult } = require("express-validator");
 const { deleteFile } = require("../middlewares/multer.js");
-const rentalCar = require("../models/carModel.js");
+const car = require("../models/carModel.js");
 const {
   uploadImageToDrive,
   deleteImageFromDrive,
   getAuthenticate,
 } = require("../services/googleDriveServices.js");
+const expressAsyncHandler = require("express-async-handler");
 require("dotenv").config();
 
-const getAllCar = async (req, res) => {
+// ANCHOR - GET ALL CAR
+const getAllCar = expressAsyncHandler(async (req, res) => {
   try {
-    const allCar = await rentalCar.find();
+    const allCar = await car.find();
     res.status(200).json({ data: allCar });
   } catch {
-    res.status(500).json({ error: error?.message || error });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const getOneCar = async (req, res) => {
+// ANCHOR - GET ONE CAR
+const getOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+  
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
-    const findOneCar = await rentalCar.findById(id);
+    const findOneCar = await car.findById(id);
     if (!findOneCar) res.status(404).json({ error: "Data tidak ditemukan" });
     res.status(200).json({ data: findOneCar });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const createNewCar = async (req, res) => {
-  const auth = getAuthenticate();
-  const newRentalCar = { ...req.body };
+// ANCHOR - CREATE NEW CAR
+const createNewCar = expressAsyncHandler(async (req, res) => {
+  // const auth = getAuthenticate();
+  const { nama, harga, seat } = req.body;
+  console.log(req.file);
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    deleteFile(req.file.path);
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
     if (!req.file) {
-      return res.status(400).json({ error: "File tidak terinput" });
+      res.status(400);
+      throw new Error("File tidak terinput!");
     }
 
-    const response = await uploadImageToDrive(
-      req.file,
-      auth,
-      process.env.CAR_FOLDER_ID
+    // const response = await uploadImageToDrive(
+    //   req.file,
+    //   auth,
+    //   process.env.CAR_FOLDER_ID
+    // );
+    // newCar.imageId = response.data.id;
+
+    const newCar = await car.create({
+      unitName: nama,
+      seat: seat,
+      pricePerDay: harga,
+      imageId: req.file.filename,
+    });
+
+    res.status(201).json({
+      message: "Car Data Created!",
+      data: newCar,
+    });
+
+    // setTimeout(() => {
+    //   deleteFile(req.file.path);
+    // }, 3000);
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+// ANCHOR - UPDATE ONE CAR
+const updateOneCar = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { nama, harga, seat } = req.body;
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
+
+  try {
+    const updatedCar = await car.findByIdAndUpdate(
+      id,
+      {
+        unitName: nama,
+        seat: seat,
+        pricePerDay: harga,
+      },
+      {
+        new: true,
+      }
     );
-    newRentalCar.imageId = response.data.id;
-    deleteFile(req.file.path);
-
-    const rentalCarData = new rentalCar({
-      ...newRentalCar,
-    });
-    const saveRentalCar = await rentalCarData.save();
-    res.status(201).json({ data: saveRentalCar });
-  } catch (err) {
-    res.status(500).json({ error: err?.message || err });
-  }
-};
-
-const updateOneCar = async (req, res) => {
-  const { id } = req.params;
-  const updateCarData = { ...req.body };
-
-  try {
-    const updatedCar = await rentalCar.findByIdAndUpdate(id, updateCarData, {
-      new: true,
-    });
-    if (!updatedCar) res.status(404).json({ error: "Data tidak ditemukan" });
+    if (!updatedCar) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
     res.status(200).json({ data: updatedCar });
-  } catch (error) {
-    return res
-      .status(error?.status || 500)
-      .json({ error: error?.message || error });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
-const deleteOneCar = async (req, res) => {
+const updateImageCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+  // const auth = getAuthenticate();
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
 
   try {
-    const auth = getAuthenticate();
+    if (!req.file) {
+      res.status(400);
+      throw new Error("File tidak terinput!");
+    }
+    const findCar = await car.findById(id);
+    req.file &&
+      deleteFile(`${__dirname}/../../public/images/${findCar.imageId}`);
 
-    const deletedCar = await rentalCar.findByIdAndDelete(id);
-    if (!deletedCar)
-      return res.status(404).json({ error: "Data tidak ditemukan." });
-    await deleteImageFromDrive(deletedCar.imageId, auth);
+    const updatedCar = await car.findByIdAndUpdate(
+      id,
+      {
+        imageId: req.file.filename,
+      },
+      {
+        new: true,
+      }
+    );
+    if (!updatedCar) {
+      deleteFile(req.file.path);
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
 
-    res.json("Data Berhasil dihapus.");
+    res.status(200).json({
+      message: "Image Updated!",
+      data: updatedCar,
+    });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
+// ANCHOR - DELETE ONE CAR
+const deleteOneCar = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
+
+  try {
+    // const auth = getAuthenticate();
+
+    const deletedCar = await car.findByIdAndDelete(id);
+    if (!deletedCar) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan, delete gagal!");
+    }
+
+    console.log(deletedCar);
+
+    deleteFile(`${__dirname}/../../public/images/${deletedCar.imageId}`);
+
+    // await deleteImageFromDrive(deletedCar.imageId, auth);
+
+    res.status(200).json({ message: "Data berhasil dihapus!" });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+// ANCHOR - EXPORT MODULE
 module.exports = {
   getAllCar,
   getOneCar,
   createNewCar,
   updateOneCar,
   deleteOneCar,
+  updateImageCar,
 };

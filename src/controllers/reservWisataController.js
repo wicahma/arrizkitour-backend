@@ -1,5 +1,7 @@
 const reservWisata = require("../models/reservWisataModel");
 
+
+// ANCHOR Get All Reserv Wisata
 const getAllReservWisata = async (req, res) => {
   try {
     const allReserv = reservWisata.find().populate({
@@ -11,6 +13,7 @@ const getAllReservWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Get One Reserv Wisata
 const getOneReservWisata = async (req, res) => {
   const { id } = req.params;
   try {
@@ -27,6 +30,7 @@ const getOneReservWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Create New Reserv Wisata
 const createReservWisata = async (req, res) => {
   const newReservData = { ...req.body };
 
@@ -42,6 +46,7 @@ const createReservWisata = async (req, res) => {
   }
 };
 
+// ANCHOR Delete One Reserv Wisata
 const deleteOneReservWisata = async (req, res) => {
   const { id } = req.params;
   try {
@@ -56,6 +61,7 @@ const deleteOneReservWisata = async (req, res) => {
   }
 };
 
+// ANCHOR EXPORT MODULE
 module.exports = {
   getAllReservWisata,
   getOneReservWisata,
