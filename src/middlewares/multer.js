@@ -10,7 +10,7 @@ const multers = multer({
       cb(null, Date.now() + "_" + file.originalname);
     },
   }),
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 20 * 1024 * 1024 },
 });
 
 const deleteFile = (filePath) => {

@@ -6,7 +6,34 @@ const { default: mongoose } = require("mongoose");
 // ANCHOR Get All Wisata
 const getAllWisata = expressAsyncHandler(async (req, res) => {
   try {
-    const allWisata = await wisata.find();
+    const allWisata = await wisata.aggregate([
+      { $unwind: "$jenisPaket" },
+      { $unwind: "$jenisPaket.pax" },
+      {
+        $group: {
+          _id: "$_id",
+          namaPaket: { $first: "$namaPaket" },
+          tempatWisata: { $first: "$jenisPaket.tempatWisata" },
+          hargaMinimum: { $min: "$jenisPaket.pax.harga" },
+          image: {
+            $first: {
+              $arrayElemAt: ["$jenisPaket.images", 0],
+            },
+          },
+          status: { $first: "$status" },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          namaPaket: 1,
+          tempatWisata: 1,
+          hargaMinimum: 1,
+          status: 1,
+          image: { $ifNull: ["$image", "https://via.placeholder.com/150"] },
+        },
+      },
+    ]);
     res.status(200).json({ data: allWisata });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -41,7 +68,7 @@ const getOneWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// ANCHOR Get One Paket Wisata + Pax 
+// ANCHOR Get One Paket Wisata + Pax
 // !(GOD DAYM THIS IS SO COOL, MONGODB IS JUST ANOTHER LEVEL OF DATABASE)
 
 const getOnePaketWisataPax = expressAsyncHandler(async (req, res) => {

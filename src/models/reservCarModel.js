@@ -18,12 +18,12 @@ const ReservCarSchema = new Schema(
       required: true,
       maxlength: 30,
     },
-    tanggalMulai: {
+    tanggalReservasi: {
       type: Date,
       required: true,
     },
-    waktuJemput: {
-      type: Date,
+    waktuAntar: {
+      type: String,
       required: true,
     },
     lokasiAntar: {
