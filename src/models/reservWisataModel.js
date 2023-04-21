@@ -2,18 +2,18 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ReservWisataSchema = new Schema({
-  wisataId: {
+  paketWisataId: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "paketWisata",
+    ref: "wisata",
   },
-  namaResevant: {
+  namaReservant: {
     type: String,
     required: true,
     maxlength: 50,
   },
   phoneNumber: {
-    type: Number,
+    type: String,
     required: true,
     max: 20,
   },
@@ -32,7 +32,7 @@ const ReservWisataSchema = new Schema({
     required: true,
   },
   waktuJemput: {
-    type: Date,
+    type: String,
     required: true,
   },
   lokasiJemput: {

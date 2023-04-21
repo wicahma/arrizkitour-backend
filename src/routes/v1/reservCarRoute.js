@@ -2,14 +2,23 @@ const express = require("express");
 const router = express.Router();
 const reservCarController = require("../../controllers/reservCarController");
 const { authJWT } = require("../../middlewares/auth");
+const {
+  createNewReservCarValidator,
+  getOneReservCarValidator,
+  deleteOneReservCarValidator,
+} = require("./validator/reservCarvalidator");
 
 router
   .route("/")
   .get(authJWT, reservCarController.getAllReservCar)
-  .post(authJWT, reservCarController.createNewReservCar);
+  .post(createNewReservCarValidator, reservCarController.createNewReservCar);
 router
   .route("/:id")
-  .get(authJWT, reservCarController.getOneReservCar)
-  .delete(authJWT, reservCarController.deleteOneReservCar);
+  .get(authJWT, getOneReservCarValidator, reservCarController.getOneReservCar)
+  .delete(
+    authJWT,
+    deleteOneReservCarValidator,
+    reservCarController.deleteOneReservCar
+  );
 
 module.exports = router;

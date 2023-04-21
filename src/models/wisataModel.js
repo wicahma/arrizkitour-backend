@@ -39,7 +39,7 @@ const paketSchema = new Schema({
 const wisataSchema = new Schema(
   {
     fasilitas: {
-      type: Array,
+      type: Array,  
       required: true,
     },
     namaPaket: {

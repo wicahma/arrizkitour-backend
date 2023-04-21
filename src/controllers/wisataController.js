@@ -61,7 +61,7 @@ const getOneWisata = expressAsyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Data tidak ditemukan");
     }
-    res.status(200).json({ data: findOneWisata });
+    return res.status(200).json({ data: findOneWisata });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

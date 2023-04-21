@@ -5,12 +5,16 @@ const mainRoute = "/api/v1/";
 require("dotenv").config();
 const MongoDB = require("./src/config/db");
 const { errorHandler } = require("./src/middlewares/errorHandler");
+const cors = require("cors");
 
 MongoDB();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
+app.use(cors({
+  origin: "*",
+}));
 app.use(express.static("public"));
 
 app.use("/images", express.static("images"));

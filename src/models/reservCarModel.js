@@ -34,7 +34,7 @@ const ReservCarSchema = new Schema(
     unitId: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: "rentalCar",
+      ref: "car",
     },
     pesananTambahan: {
       type: String,
