@@ -47,7 +47,7 @@ const createNewReservCar = async (req, res) => {
       phoneNumber: nomorTelepon,
       email: email,
       unitId: jenisMobil,
-      tanggalMulai: tanggalReservasi,
+      tanggalReservasi: tanggalReservasi,
       waktuAntar: waktuAntar,
       lokasiAntar: lokasiAntar,
       pesananTambahan: pesananTambahan,
