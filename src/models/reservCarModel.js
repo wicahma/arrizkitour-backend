@@ -18,12 +18,12 @@ const ReservCarSchema = new Schema(
       required: true,
       maxlength: 30,
     },
-    tanggalMulai: {
+    tanggalReservasi: {
       type: Date,
       required: true,
     },
-    waktuJemput: {
-      type: Date,
+    waktuAntar: {
+      type: String,
       required: true,
     },
     lokasiAntar: {
@@ -34,7 +34,7 @@ const ReservCarSchema = new Schema(
     unitId: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: "rentalCar",
+      ref: "car",
     },
     pesananTambahan: {
       type: String,

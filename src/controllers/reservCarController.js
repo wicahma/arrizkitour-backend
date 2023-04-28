@@ -32,7 +32,26 @@ const getOneReservCar = async (req, res) => {
 
 // ANCHOR Create New Reserv Car
 const createNewReservCar = async (req, res) => {
-  const newReservData = { ...req.body };
+  const {
+      nama,
+      email,
+      nomorTelepon,
+      jenisMobil,
+      tanggalReservasi,
+      waktuAntar,
+      lokasiAntar,
+      pesananTambahan,
+    } = req.body,
+    newReservData = {
+      namaReservant: nama,
+      phoneNumber: nomorTelepon,
+      email: email,
+      unitId: jenisMobil,
+      tanggalReservasi: tanggalReservasi,
+      waktuAntar: waktuAntar,
+      lokasiAntar: lokasiAntar,
+      pesananTambahan: pesananTambahan,
+    };
 
   try {
     const newReserv = new reservCar({

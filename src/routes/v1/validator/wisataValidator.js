@@ -24,3 +24,18 @@ exports.createNewWisataValidator = [
       "Nama Paket must be at least 3 and under 100 characters long!"
     ),
 ];
+
+exports.getOnePaketWisataPaxValidator = [
+  param("id")
+    .exists()
+    .withMessage("ID is Required!")
+    .isMongoId()
+    .withMessage("Invalid ID!"),
+  param("orang")
+    .exists()
+    .withMessage("Orang is Required!")
+    .isNumeric()
+    .withMessage("Orang must be a number!")
+    .isLength({ min: 1, max: 2 })
+    .withMessage("Orang must be at least 1 and under 2 characters long!"),
+];

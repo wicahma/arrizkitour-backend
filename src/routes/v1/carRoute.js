@@ -9,11 +9,13 @@ const {
   updateImageCarValidator,
 } = require("./validator/carValidator");
 const { multers } = require("../../middlewares/multer");
+const { authJWT } = require("../../middlewares/auth");
 
 router
   .route("/")
   .get(CarController.getAllCar)
   .post(
+    authJWT,
     multers.single("gambar"),
     createNewCarValidator,
     CarController.createNewCar
@@ -22,12 +24,13 @@ router
 router
   .route("/:id")
   .get(getOneCarValidator, CarController.getOneCar)
-  .put(updateCarValidator, CarController.updateOneCar)
-  .delete(deleteCarValidator, CarController.deleteOneCar);
+  .put(authJWT, updateCarValidator, CarController.updateOneCar)
+  .delete(authJWT, deleteCarValidator, CarController.deleteOneCar);
 
 router
   .route("/:id/images")
   .put(
+    authJWT,
     multers.single("gambar"),
     updateImageCarValidator,
     CarController.updateImageCar

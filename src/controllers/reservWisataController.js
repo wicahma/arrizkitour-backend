@@ -1,11 +1,10 @@
 const reservWisata = require("../models/reservWisataModel");
 
-
 // ANCHOR Get All Reserv Wisata
 const getAllReservWisata = async (req, res) => {
   try {
     const allReserv = reservWisata.find().populate({
-      path: "wisataId",
+      path: "paketWisataId",
     });
     return res.status(200).json({ data: allReserv });
   } catch (err) {
@@ -32,7 +31,28 @@ const getOneReservWisata = async (req, res) => {
 
 // ANCHOR Create New Reserv Wisata
 const createReservWisata = async (req, res) => {
-  const newReservData = { ...req.body };
+  const {
+      nama,
+      email,
+      nomorTelepon,
+      paketID,
+      jumlahPeserta,
+      tanggalReservasi,
+      waktuJemput,
+      lokasiJemput,
+      pesananTambahan,
+    } = req.body,
+    newReservData = {
+      namaReservant: nama,
+      phoneNumber: nomorTelepon,
+      email: email,
+      paketWisataId: paketID,
+      jumlahPeserta: jumlahPeserta,
+      tanggalMulai: tanggalReservasi,
+      waktuJemput: waktuJemput,
+      lokasiJemput: lokasiJemput,
+      pesananTambahan: pesananTambahan,
+    };
 
   try {
     const newReserv = new reservWisata({

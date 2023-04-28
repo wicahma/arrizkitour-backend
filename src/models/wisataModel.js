@@ -39,13 +39,19 @@ const paketSchema = new Schema({
 const wisataSchema = new Schema(
   {
     fasilitas: {
-      type: Array,
+      type: Array,  
       required: true,
     },
     namaPaket: {
       type: String,
       required: true,
       maxlength: [100, "Nama Paket harus kurang dari 100 karakter kata!"],
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: ["aktif", "nonaktif"],
+      default: "nonaktif",
     },
     jenisPaket: [paketSchema],
   },

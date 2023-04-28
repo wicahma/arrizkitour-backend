@@ -12,7 +12,7 @@ require("dotenv").config();
 // ANCHOR - GET ALL CAR
 const getAllCar = expressAsyncHandler(async (req, res) => {
   try {
-    const allCar = await car.find();
+    const allCar = await car.find().select("-__v -createdAt -updatedAt");
     res.status(200).json({ data: allCar });
   } catch {
     if (!res.status) res.status(500);
@@ -23,7 +23,7 @@ const getAllCar = expressAsyncHandler(async (req, res) => {
 // ANCHOR - GET ONE CAR
 const getOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-  
+
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);

@@ -19,6 +19,12 @@ const carSchema = mongoose.Schema(
       type: String,
       required: [true, "Gambar tidak boleh kosong!"],
     },
+    status: {
+      type: String,
+      required: true,
+      enum: ["aktif", "nonaktif"],
+      default: "nonaktif",
+    },
   },
   {
     timestamps: true,
