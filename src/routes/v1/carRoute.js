@@ -16,7 +16,7 @@ router
   .get(CarController.getAllCar)
   .post(
     authJWT,
-    multers.single("gambar"),
+    multers.single("images"),
     createNewCarValidator,
     CarController.createNewCar
   );
@@ -31,7 +31,7 @@ router
   .route("/:id/images")
   .put(
     authJWT,
-    multers.single("gambar"),
+    multers.single("images"),
     updateImageCarValidator,
     CarController.updateImageCar
   );

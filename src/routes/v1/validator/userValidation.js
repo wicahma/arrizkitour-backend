@@ -1,4 +1,4 @@
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 
 exports.loginValidator = [
   body("email")
@@ -29,4 +29,12 @@ exports.registerValidator = [
     .withMessage("Nickname must be a string!")
     .isLength({ min: 3, max: 100 })
     .withMessage("Nickname must be at least 3 and under 100 characters long!"),
+];
+
+exports.idCheckValidator = [
+  param("id")
+    .exists()
+    .withMessage("ID is Required!")
+    .isMongoId()
+    .withMessage("Invalid ID!"),
 ];
