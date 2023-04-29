@@ -165,6 +165,12 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
   try {
     const updateWisata = await wisata.findByIdAndUpdate(id, updateWisataData, {
       new: true,
+      projection: {
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+        fasilitas: 0,
+      },
     });
     if (!updateWisata) {
       res.status(404).json({ error: "Data tidak ditemukan" });

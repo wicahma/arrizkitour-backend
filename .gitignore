@@ -4,3 +4,4 @@ api-model.txt
 credentials.json
 googleService.json
 /public/images
+.fuse*
