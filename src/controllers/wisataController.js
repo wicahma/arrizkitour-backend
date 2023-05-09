@@ -7,11 +7,12 @@ const { default: mongoose } = require("mongoose");
 const getAllWisata = expressAsyncHandler(async (req, res) => {
   try {
     const allWisata = await wisata.aggregate([
-      { $unwind: "$jenisPaket" },
-      { $unwind: "$jenisPaket.pax" },
+      { $unwind: { path: "$jenisPaket", includeArrayIndex: "string" } },
+      { $unwind: { path: "$jenisPaket.pax", includeArrayIndex: "string" } },
       {
         $group: {
           _id: "$_id",
+          createdAt: { $first: "$createdAt" },
           namaPaket: { $first: "$namaPaket" },
           tempatWisata: { $first: "$jenisPaket.tempatWisata" },
           hargaMinimum: { $min: "$jenisPaket.pax.harga" },
@@ -21,6 +22,11 @@ const getAllWisata = expressAsyncHandler(async (req, res) => {
             },
           },
           status: { $first: "$status" },
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
         },
       },
       {
@@ -121,7 +127,7 @@ const getOnePaketWisataPax = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR Create New Wisata
 const createNewWisata = expressAsyncHandler(async (req, res) => {
-  const { fasilitas, nama, paketWisata } = req.body;
+  const { fasilitas, nama, jenisPaket } = req.body;
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);
@@ -133,14 +139,13 @@ const createNewWisata = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const newWisata = new wisata({
+    const newWisata = wisata.create({
       fasilitas: fasilitas,
       namaPaket: nama,
-      jenisPaket: paketWisata,
+      jenisPaket: jenisPaket,
     });
-    const saveWisata = await newWisata.save();
 
-    res.status(200).json({ data: saveWisata });
+    res.status(200).json({ message: "Data Created!", data: newWisata });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -150,7 +155,12 @@ const createNewWisata = expressAsyncHandler(async (req, res) => {
 // ANCHOR Update One Wisata
 const updateOneWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-  const updateWisataData = { ...req.body };
+  const updateWisataData = {
+    fasiltas: req.body.fasilitas,
+    namaPaket: req.body.nama,
+    jenisPaket: req.body.paketWisata,
+    status: req.body.status,
+  };
 
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
@@ -169,7 +179,6 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
         __v: 0,
         createdAt: 0,
         updatedAt: 0,
-        fasilitas: 0,
       },
     });
     if (!updateWisata) {
