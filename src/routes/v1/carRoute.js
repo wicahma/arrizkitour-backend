@@ -8,7 +8,7 @@ const {
   updateCarValidator,
   updateImageCarValidator,
 } = require("./validator/carValidator");
-const { multers } = require("../../middlewares/multer");
+const { imageHandler } = require("../../middlewares/multer");
 const { authJWT } = require("../../middlewares/auth");
 
 router
@@ -16,7 +16,7 @@ router
   .get(CarController.getAllCar)
   .post(
     authJWT,
-    multers.single("images"),
+    imageHandler.single("images"),
     createNewCarValidator,
     CarController.createNewCar
   );
@@ -31,7 +31,7 @@ router
   .route("/:id/images")
   .put(
     authJWT,
-    multers.single("images"),
+    imageHandler.single("images"),
     updateImageCarValidator,
     CarController.updateImageCar
   );

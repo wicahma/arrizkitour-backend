@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const wisata = require("../models/wisataModel");
 const { validationResult } = require("express-validator");
 const { default: mongoose } = require("mongoose");
+const { deleteFile } = require("../middlewares/multer");
 
 // ANCHOR Get All Wisata
 const getAllWisata = expressAsyncHandler(async (req, res) => {
@@ -144,7 +145,6 @@ const createNewWisata = expressAsyncHandler(async (req, res) => {
       namaPaket: nama,
       jenisPaket: jenisPaket,
     });
-
     res.status(200).json({ message: "Data Created!", data: newWisata });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -192,6 +192,86 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
+// ANCHOR Update One Wisata Paket Image's
+
+const updateOneWisataImage = expressAsyncHandler(async (req, res) => {
+  const { idPaket } = req.params;
+  // const auth = getAuthenticate();
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
+
+  try {
+    if (!req.files) {
+      res.status(400);
+      throw new Error("File tidak terinput!");
+    }
+    const findWisata = await wisata.aggregate([
+      {
+        $unwind: {
+          path: "$jenisPaket",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $match: {
+          "jenisPaket._id": mongoose.Types.ObjectId(idPaket),
+        },
+      },
+    ]);
+
+    if (findWisata.length < 1) {
+      req.files.map((file) => deleteFile(file.path));
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
+
+    findWisata[0].jenisPaket.images.map((image) => {
+      deleteFile(`${__dirname}/../../public/images/${image}`);
+    });
+
+    const imageName = req.files.map((file) => file.filename.toString());
+
+    const updatedWisata = await wisata.updateOne(
+      {
+        "jenisPaket._id": new mongoose.Types.ObjectId(idPaket),
+      },
+      {
+        $set: {
+          "jenisPaket.$.images": [...imageName],
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [
+          { "jenisPaket._id": new mongoose.Types.ObjectId(idPaket) },
+        ],
+      }
+    );
+
+    if (updatedWisata.modifiedCount === 0) {
+      req.files.map((file) => deleteFile(file.path));
+      res.status(404);
+      throw new Error("Data tidak ditemukan, update gagal!");
+    }
+
+    res.status(200).json({
+      message: "Gambar berhasil diupdate!",
+      data: updatedWisata,
+    });
+  } catch (err) {
+    req.files.map((file) => deleteFile(file.path));
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
 // ANCHOR Delete One Wisata
 const deleteOneWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
@@ -226,5 +306,6 @@ module.exports = {
   getOnePaketWisataPax,
   createNewWisata,
   updateOneWisata,
+  updateOneWisataImage,
   deleteOneWisata,
 };

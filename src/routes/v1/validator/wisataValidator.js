@@ -39,3 +39,11 @@ exports.getOnePaketWisataPaxValidator = [
     .isLength({ min: 1, max: 2 })
     .withMessage("Orang must be at least 1 and under 2 characters long!"),
 ];
+
+exports.updateImageWisataValidator = [
+  param("idPaket")
+    .exists()
+    .withMessage("ID is Required!")
+    .isMongoId()
+    .withMessage("Invalid ID!"),
+];

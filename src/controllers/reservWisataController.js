@@ -1,19 +1,19 @@
-const reservWisata = require("../models/reservWisataModel");
+const expressAsyncHandler = require("express-async-handler");
+const reservWisataModel = require("../models/reservWisataModel");
 
 // ANCHOR Get All Reserv Wisata
-const getAllReservWisata = async (req, res) => {
+const getAllReservWisata = expressAsyncHandler(async (req, res) => {
   try {
-    const allReserv = reservWisata.find().populate({
-      path: "paketWisataId",
-    });
+    const allReserv = await reservWisataModel.find();
     return res.status(200).json({ data: allReserv });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
-};
+});
 
 // ANCHOR Get One Reserv Wisata
-const getOneReservWisata = async (req, res) => {
+const getOneReservWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const oneReserv = await reservWisata.find(id).populate({
@@ -27,10 +27,10 @@ const getOneReservWisata = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message || err });
   }
-};
+});
 
 // ANCHOR Create New Reserv Wisata
-const createReservWisata = async (req, res) => {
+const createReservWisata = expressAsyncHandler(async (req, res) => {
   const {
       nama,
       email,
@@ -64,10 +64,10 @@ const createReservWisata = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message || err });
   }
-};
+});
 
 // ANCHOR Delete One Reserv Wisata
-const deleteOneReservWisata = async (req, res) => {
+const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservCar.findByIdAndDelete(id);
@@ -79,7 +79,7 @@ const deleteOneReservWisata = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err?.message || err });
   }
-};
+});
 
 // ANCHOR EXPORT MODULE
 module.exports = {

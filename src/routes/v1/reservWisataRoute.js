@@ -10,8 +10,8 @@ const {
 
 router
   .route("/")
-  .get(authJWT, reservRoute.getAllReservWisata)
-  .post(createReservWisataValidator, reservRoute.createReservWisata);
+  .get(reservRoute.getAllReservWisata)
+  .post(authJWT, createReservWisataValidator, reservRoute.createReservWisata);
 router
   .route("/:id")
   .get(authJWT, getOneReservWisataValidator, reservRoute.getOneReservWisata)

@@ -30,16 +30,18 @@ const paketSchema = new Schema({
     type: [paxSchema],
     required: true,
   },
-  images: {
-    type: [String],
-    required: true,
-  },
+  images: [
+    {
+      type: String,
+      required: true,
+    },
+  ],
 });
 
 const wisataSchema = new Schema(
   {
     fasilitas: {
-      type: Array,  
+      type: Array,
       required: true,
     },
     namaPaket: {

@@ -82,13 +82,14 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
     });
 
     if (!newCar._doc) {
+      deleteFile(req.file.path);
       res.status(400);
       throw new Error("Data gagal dibuat!");
     }
 
     res.status(201).json({
       message: "Car Data Created!",
-      data: newCar._doc,
+      data: newCar,
     });
   } catch (err) {
     if (req.file) deleteFile(req.file.path);
