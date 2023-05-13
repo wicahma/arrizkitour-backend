@@ -51,6 +51,9 @@ exports.updateCarValidator = [
     .withMessage("Seat is Required!")
     .isNumeric()
     .withMessage("Seat must be a number!"),
+  body("status")
+    .isString()
+    .withMessage("Status must be a 'aktif' or 'nonaktif'!"),
 ];
 
 exports.deleteCarValidator = [

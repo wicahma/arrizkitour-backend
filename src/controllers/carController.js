@@ -81,15 +81,18 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
       imageId: req.file.filename,
     });
 
+    if (!newCar._doc) {
+      deleteFile(req.file.path);
+      res.status(400);
+      throw new Error("Data gagal dibuat!");
+    }
+
     res.status(201).json({
       message: "Car Data Created!",
       data: newCar,
     });
-
-    // setTimeout(() => {
-    //   deleteFile(req.file.path);
-    // }, 3000);
   } catch (err) {
+    if (req.file) deleteFile(req.file.path);
     if (!res.status) res.status(500);
     throw new Error(err);
   }
@@ -98,7 +101,7 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
 // ANCHOR - UPDATE ONE CAR
 const updateOneCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { nama, harga, seat } = req.body;
+  const { nama, harga, seat, status } = req.body;
 
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
@@ -117,6 +120,7 @@ const updateOneCar = expressAsyncHandler(async (req, res) => {
         unitName: nama,
         seat: seat,
         pricePerDay: harga,
+        status: status,
       },
       {
         new: true,
@@ -202,8 +206,6 @@ const deleteOneCar = expressAsyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Data tidak ditemukan, delete gagal!");
     }
-
-    console.log(deletedCar);
 
     deleteFile(`${__dirname}/../../public/images/${deletedCar.imageId}`);
 

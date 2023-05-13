@@ -10,8 +10,12 @@ const {
 
 router
   .route("/")
-  .get(authJWT, reservCarController.getAllReservCar)
-  .post(createNewReservCarValidator, reservCarController.createNewReservCar);
+  .get(reservCarController.getAllReservCar)
+  .post(
+    authJWT,
+    createNewReservCarValidator,
+    reservCarController.createNewReservCar
+  );
 router
   .route("/:id")
   .get(authJWT, getOneReservCarValidator, reservCarController.getOneReservCar)

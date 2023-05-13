@@ -29,7 +29,7 @@ const userLogin = expressAsyncHandler(async (req, res) => {
       throw new Error("Password salah");
     }
     const token = generateToken(isExist._id);
-    res.status(200).json({ data: { ...isExist._doc, token: token } });
+    res.status(200).json({ data: { token: token } });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -40,6 +40,21 @@ const getUser = expressAsyncHandler(async (req, res) => {
   const { token } = req.body;
 
   try {
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+const checkUser = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const isExist = await user.findById(id);
+    if (!isExist) {
+      res.status(404);
+      throw new Error("Unauthorized!");
+    }
+    res.status(200).json({ validated: true });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -80,4 +95,5 @@ const adminRegister = expressAsyncHandler(async (req, res) => {
 module.exports = {
   userLogin,
   adminRegister,
+  checkUser
 };

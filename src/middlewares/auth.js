@@ -22,7 +22,7 @@ const authJWT = asyncHandler(async (req, res, next) => {
 
       res.locals.user = isAdmin;
     } catch (err) {
-      if (!res.status) res.status(401);
+      res.status(401);
       throw new Error(err);
     }
   }

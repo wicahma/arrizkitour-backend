@@ -5,8 +5,10 @@ const {
   createNewWisataValidator,
   getOneWisataValidator,
   getOnePaketWisataPaxValidator,
+  updateImageWisataValidator,
 } = require("./validator/wisataValidator");
 const { authJWT } = require("../../middlewares/auth");
+const { imageHandler } = require("../../middlewares/multer");
 
 router
   .route("/")
@@ -15,9 +17,18 @@ router
 
 router
   .route("/:id")
-  .get(getOneWisataValidator, wisataRoute.getOneWisata)
   .put(authJWT, wisataRoute.updateOneWisata)
+  .get(getOneWisataValidator, wisataRoute.getOneWisata)
   .delete(authJWT, wisataRoute.deleteOneWisata);
+
+router
+  .route("/:idPaket/images")
+  .put(
+    authJWT,
+    imageHandler.array("images", 10),
+    updateImageWisataValidator,
+    wisataRoute.updateOneWisataImage
+  );
 
 router
   .route("/pax/:id&:orang")
