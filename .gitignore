@@ -5,3 +5,4 @@ credentials.json
 googleService.json
 public/images/*
 .fuse*
+*.zip

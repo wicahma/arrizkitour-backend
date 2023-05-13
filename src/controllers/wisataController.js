@@ -140,12 +140,12 @@ const createNewWisata = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const newWisata = wisata.create({
+    const newWisata = await wisata.create({
       fasilitas: fasilitas,
       namaPaket: nama,
       jenisPaket: jenisPaket,
     });
-    res.status(200).json({ message: "Data Created!", data: newWisata });
+    res.status(200).json({ message: "Data Created!", data: req.body });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
