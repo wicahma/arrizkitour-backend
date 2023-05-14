@@ -1,10 +1,10 @@
 const expressAsyncHandler = require("express-async-handler");
-const reservWisataModel = require("../models/reservWisataModel");
+const reservCustomWisata = require("../models/reservCustomWisata");
 
 // ANCHOR Get All Reserv Wisata
-const getAllReservWisata = expressAsyncHandler(async (req, res) => {
+const getAllreservCustomWisata = expressAsyncHandler(async (req, res) => {
   try {
-    const allReserv = await reservWisataModel.find();
+    const allReserv = await reservCustomWisata.find();
     return res.status(200).json({ data: allReserv });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -13,15 +13,13 @@ const getAllReservWisata = expressAsyncHandler(async (req, res) => {
 });
 
 // ANCHOR Get One Reserv Wisata
-const getOneReservWisata = expressAsyncHandler(async (req, res) => {
+const getOnereservCustomWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
-    const oneReserv = await reservWisata.find(id).populate({
-      path: "wisataId",
-    });
+    const oneReserv = await reservCustomWisata.find(id);
     if (!oneReserv) {
-      res.status(404).json({ error: "Data tidak ditemukan." });
-      return;
+      res.status(404);
+      throw new Error("Data tidak ditemukan.");
     }
     return res.status(200).json({ data: oneReserv });
   } catch (err) {
@@ -31,15 +29,17 @@ const getOneReservWisata = expressAsyncHandler(async (req, res) => {
 });
 
 // ANCHOR Create New Reserv Wisata
-const createReservWisata = expressAsyncHandler(async (req, res) => {
+const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
   const {
       nama,
       email,
       nomorTelepon,
-      paketID,
       jumlahPeserta,
       tanggalReservasi,
       waktuJemput,
+      lokasiAntar,
+      fasilitasPilihan,
+      armada,
       lokasiJemput,
       pesananTambahan,
     } = req.body,
@@ -47,16 +47,18 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
       namaReservant: nama,
       phoneNumber: nomorTelepon,
       email: email,
-      paketWisataId: paketID,
       jumlahPeserta: jumlahPeserta,
-      tanggalMulai: tanggalReservasi,
+      tanggalReservasi: tanggalReservasi,
       waktuJemput: waktuJemput,
       lokasiJemput: lokasiJemput,
+      lokasiAntar: lokasiAntar,
+      armada: armada,
+      fasilitasPilihan: fasilitasPilihan,
       pesananTambahan: pesananTambahan,
     };
 
   try {
-    const newReserv = new reservWisata({
+    const newReserv = new reservCustomWisata({
       ...newReservData,
     });
     const savedReserv = await newReserv.save();
@@ -69,7 +71,7 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
 });
 
 // ANCHOR Delete One Reserv Wisata
-const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
+const deleteOnereservCustomWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservCar.findByIdAndDelete(id);
@@ -86,8 +88,8 @@ const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR EXPORT MODULE
 module.exports = {
-  getAllReservWisata,
-  getOneReservWisata,
-  createReservWisata,
-  deleteOneReservWisata,
+  getAllreservCustomWisata,
+  getOnereservCustomWisata,
+  createreservCustomWisata,
+  deleteOnereservCustomWisata,
 };

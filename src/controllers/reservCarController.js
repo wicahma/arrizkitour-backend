@@ -9,7 +9,8 @@ const getAllReservCar = async (req, res) => {
     });
     res.status(200).json({ data: allReserv });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
 };
 
@@ -26,7 +27,8 @@ const getOneReservCar = async (req, res) => {
     }
     res.status(200).json({ data: oneReserv });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
 };
 
@@ -61,7 +63,8 @@ const createNewReservCar = async (req, res) => {
     const savedReserv = await newReserv.save();
     res.status(201).json({ data: savedReserv });
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
 };
 
@@ -76,7 +79,8 @@ const deleteOneReservCar = async (req, res) => {
     }
     res.json("Data Berhasil dihapus.");
   } catch (err) {
-    res.status(500).json({ error: err?.message || err });
+    if (!res.status) res.status(500);
+    throw new Error(err);
   }
 };
 
