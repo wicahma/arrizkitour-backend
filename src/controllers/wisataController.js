@@ -292,7 +292,17 @@ const deleteOneWisata = expressAsyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Data tidak ditemukan.");
     }
-    res.status(200).json({ message: "Data Berhasil dihapus!" });
+    const { jenisPaket } = deletedWisata;
+
+    jenisPaket.map((paket) => {
+      paket.images.map((image) => {
+        deleteFile(`${__dirname}/../../public/images/${image}`);
+      });
+    });
+
+    res
+      .status(200)
+      .json({ message: "Data Berhasil dihapus!", data: deletedWisata });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

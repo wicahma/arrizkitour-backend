@@ -26,6 +26,11 @@ exports.createNewCarValidator = [
     .withMessage("Seat is Required!")
     .isNumeric()
     .withMessage("Seat must be a number!"),
+  body("fasilitas")
+    .exists()
+    .withMessage("Fasilitas is Required!")
+    .isString()
+    .withMessage("Fasilitas must be a string!"),
 ];
 
 exports.updateCarValidator = [
@@ -51,6 +56,11 @@ exports.updateCarValidator = [
     .withMessage("Seat is Required!")
     .isNumeric()
     .withMessage("Seat must be a number!"),
+  body("fasilitas")
+    .exists()
+    .withMessage("Fasilitas is Required!")
+    .isString()
+    .withMessage("Fasilitas must be a string!"),
   body("status")
     .isString()
     .withMessage("Status must be a 'aktif' or 'nonaktif'!"),

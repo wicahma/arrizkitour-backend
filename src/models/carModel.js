@@ -15,6 +15,10 @@ const carSchema = mongoose.Schema(
       type: Number,
       required: [true, "pricePerDay tidak boleh kosong!"],
     },
+    fasilitas: {
+      type: String,
+      required: [true, "Fasilitas tidak boleh kosong!"],
+    },
     imageId: {
       type: String,
       required: [true, "Gambar tidak boleh kosong!"],

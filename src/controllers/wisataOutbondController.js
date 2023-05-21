@@ -2,12 +2,12 @@ const expressAsyncHandler = require("express-async-handler");
 const { validationResult } = require("express-validator");
 const { default: mongoose } = require("mongoose");
 const { deleteFile } = require("../middlewares/multer");
-const wisataOutbond = require("../models/wisataOutbond");
+const outbond = require("../models/wisataOutbond");
 
 // ANCHOR Get All WisataOutbond
 const getAllWisataOutbond = expressAsyncHandler(async (req, res) => {
   try {
-    const allWisataOutbond = await wisataOutbond.aggregate([
+    const allWisataOutbond = await outbond.aggregate([
       { $unwind: { path: "$jenisPaket", includeArrayIndex: "string" } },
       {
         $group: {
@@ -40,7 +40,9 @@ const getAllWisataOutbond = expressAsyncHandler(async (req, res) => {
         },
       },
     ]);
-    res.status(200).json({ data: allWisataOutbond });
+    res
+      .status(200)
+      .json({ message: "Data berhasil diambil", data: allWisataOutbond });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -62,7 +64,7 @@ const getOneWisataOutbond = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const findOneWisataOutbond = await wisataOutbond.findById(id);
+    const findOneWisataOutbond = await outbond.findById(id);
     if (!findOneWisataOutbond) {
       res.status(404);
       throw new Error("Data tidak ditemukan");
@@ -75,10 +77,9 @@ const getOneWisataOutbond = expressAsyncHandler(async (req, res) => {
 });
 
 // ANCHOR Get One Paket WisataOutbond + Pax
-// !(GOD DAYM THIS IS SO COOL, MONGODB IS JUST ANOTHER LEVEL OF DATABASE)
 
-const getOnePaketWisataOutbondPax = expressAsyncHandler(async (req, res) => {
-  const { id, orang } = req.params;
+const getOnePaketWisataOutbond = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
   const ObjectID = mongoose.Types.ObjectId(id);
 
   const isError = validationResult(req);
@@ -92,7 +93,7 @@ const getOnePaketWisataOutbondPax = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const findOnePaketWisataOutbond = await wisataOutbond.aggregate([
+    const findOnePaketWisataOutbond = await outbond.aggregate([
       {
         $unwind: {
           path: "$jenisPaket",
@@ -102,7 +103,6 @@ const getOnePaketWisataOutbondPax = expressAsyncHandler(async (req, res) => {
       {
         $match: {
           "jenisPaket._id": ObjectID,
-          // { "jenisPaket.pax.jumlah": Number(orang) },
         },
       },
     ]);
@@ -131,10 +131,10 @@ const createNewWisataOutbond = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    await wisataOutbond
+    await outbond
       .create({
         keterangan: keterangan,
-        namaPaket: nama,
+        namaTempat: nama,
         jenisPaket: jenisPaket,
       })
       .then((data) => {
@@ -152,7 +152,7 @@ const updateOneWisataOutbond = expressAsyncHandler(async (req, res) => {
   const updateWisataOutbondData = {
     keterangan: req.body.keterangan,
     namaTempat: req.body.nama,
-    jenisPaket: req.body.paketWisata,
+    jenisPaket: req.body.jenisPaket,
     status: req.body.status,
   };
 
@@ -167,7 +167,7 @@ const updateOneWisataOutbond = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const updateWisataOutbond = await wisataOutbond.findByIdAndUpdate(
+    const updateWisataOutbond = await outbond.findByIdAndUpdate(
       id,
       updateWisataOutbondData,
       {
@@ -183,7 +183,9 @@ const updateOneWisataOutbond = expressAsyncHandler(async (req, res) => {
       res.status(404).json({ error: "Data tidak ditemukan" });
       return;
     }
-    res.status(200).json({ data: updateWisataOutbond });
+    res
+      .status(200)
+      .json({ message: "Data berhasil Diupdate!", data: updateWisataOutbond });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -194,7 +196,6 @@ const updateOneWisataOutbond = expressAsyncHandler(async (req, res) => {
 
 const updateOneWisataOutbondImage = expressAsyncHandler(async (req, res) => {
   const { idPaket } = req.params;
-  // const auth = getAuthenticate();
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);
@@ -210,7 +211,7 @@ const updateOneWisataOutbondImage = expressAsyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("File tidak terinput!");
     }
-    const findWisataOutbond = await wisataOutbond.aggregate([
+    const findWisataOutbond = await outbond.aggregate([
       {
         $unwind: {
           path: "$jenisPaket",
@@ -224,7 +225,7 @@ const updateOneWisataOutbondImage = expressAsyncHandler(async (req, res) => {
       },
     ]);
 
-    if (findwisataOutbond.length < 1) {
+    if (findWisataOutbond.length < 1) {
       req.files.map((file) => deleteFile(file.path));
       res.status(404);
       throw new Error("Data tidak ditemukan, update gagal!");
@@ -236,7 +237,7 @@ const updateOneWisataOutbondImage = expressAsyncHandler(async (req, res) => {
 
     const imageName = req.files.map((file) => file.filename.toString());
 
-    const updatedWisataOutbond = await wisataOutbond.updateOne(
+    const updatedWisataOutbond = await outbond.updateOne(
       {
         "jenisPaket._id": new mongoose.Types.ObjectId(idPaket),
       },
@@ -253,7 +254,7 @@ const updateOneWisataOutbondImage = expressAsyncHandler(async (req, res) => {
       }
     );
 
-    if (updatedwisataOutbond.modifiedCount === 0) {
+    if (updatedWisataOutbond.modifiedCount === 0) {
       req.files.map((file) => deleteFile(file.path));
       res.status(404);
       throw new Error("Data tidak ditemukan, update gagal!");
@@ -285,12 +286,20 @@ const deleteOneWisataOutbond = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    const deletedWisataOutbond = await wisataOutbond.findByIdAndDelete(id);
+    const deletedWisataOutbond = await outbond.findByIdAndDelete(id);
     if (!deletedWisataOutbond) {
       res.status(404);
       throw new Error("Data tidak ditemukan.");
     }
-    res.status(200).json({ message: "Data Berhasil dihapus!" });
+    const { jenisPaket } = deletedWisataOutbond;
+    jenisPaket.map((paket) => {
+      paket.images.map((image) => {
+        deleteFile(`${__dirname}/../../public/images/${image}`);
+      });
+    });
+    res
+      .status(200)
+      .json({ message: "Data Berhasil dihapus!", data: deletedWisataOutbond });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -301,7 +310,7 @@ const deleteOneWisataOutbond = expressAsyncHandler(async (req, res) => {
 module.exports = {
   getAllWisataOutbond,
   getOneWisataOutbond,
-  getOnePaketWisataOutbondPax,
+  getOnePaketWisataOutbond,
   createNewWisataOutbond,
   updateOneWisataOutbond,
   updateOneWisataOutbondImage,

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const paketSchema = new Schema({
+const paketOutbondSchema = new Schema({
   fasilitas: {
     type: [String],
     required: true,
@@ -29,12 +29,12 @@ const paketSchema = new Schema({
   ],
 });
 
-const wisataSchema = new Schema(
+const outbondSchema = new Schema(
   {
     keterangan: {
-      type: Array,
+      type: String,
       required: true,
-      maxlength: [30, "Keterangan harus kurang dari 100 karakter kata!"],
+      maxlength: [100, "Keterangan harus kurang dari 100 karakter kata!"],
     },
     namaTempat: {
       type: String,
@@ -47,11 +47,11 @@ const wisataSchema = new Schema(
       enum: ["aktif", "nonaktif"],
       default: "nonaktif",
     },
-    jenisPaket: [paketSchema],
+    jenisPaket: [paketOutbondSchema],
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("wisata", wisataSchema);
+module.exports = mongoose.model("outbond", outbondSchema);
