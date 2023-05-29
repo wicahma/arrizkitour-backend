@@ -1,6 +1,6 @@
 const { body, param } = require("express-validator");
 
-exports.getOneReservWisataValidator = [
+exports.getOneReservWisataOutbondValidator = [
   param("id")
     .exists()
     .withMessage("ID is Required!")
@@ -8,7 +8,7 @@ exports.getOneReservWisataValidator = [
     .withMessage("Invalid ID!"),
 ];
 
-exports.deleteOneReservWisataValidator = [
+exports.deleteOneReservWisataOutbondValidator = [
   param("id")
     .exists()
     .withMessage("ID is Required!")
@@ -16,7 +16,7 @@ exports.deleteOneReservWisataValidator = [
     .withMessage("Invalid ID!"),
 ];
 
-exports.createReservWisataValidator = [
+exports.createReservWisataOutbondValidator = [
   body("nama").exists().withMessage("Nama is Required!"),
   body("email").exists().withMessage("Email is Required!"),
   body("nomorTelepon").exists().withMessage("Nomor Telepon is Required!"),
@@ -30,7 +30,7 @@ exports.createReservWisataValidator = [
   body("pesananTambahan").exists().withMessage("Pesanan Tambahan is Required!"),
 ];
 
-exports.updateOneReservWisataValidator = [
+exports.updateOneReservWisataOutbondValidator = [
   param("id")
     .exists()
     .withMessage("ID is Required!")

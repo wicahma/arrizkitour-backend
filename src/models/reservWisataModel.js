@@ -2,10 +2,15 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ReservWisataSchema = new Schema({
+  jenisWisata: {
+    type: String,
+    required: true,
+    enum: ["outbond", "wisata"],
+  },
   paketWisataId: {
     type: mongoose.Types.ObjectId,
     required: true,
-    ref: "wisata",
+    refPath: "jenisWisata",
   },
   namaReservant: {
     type: String,
@@ -44,6 +49,10 @@ const ReservWisataSchema = new Schema({
     type: String,
     required: false,
     maxlength: 300,
+  },
+  harga: {
+    type: Number,
+    required: true,
   },
 });
 

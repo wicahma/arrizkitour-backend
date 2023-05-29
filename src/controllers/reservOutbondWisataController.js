@@ -1,8 +1,8 @@
 const expressAsyncHandler = require("express-async-handler");
 const reservWisataModel = require("../models/reservWisataModel");
 
-// ANCHOR Get All Reserv Wisata
-const getAllReservWisata = expressAsyncHandler(async (req, res) => {
+// ANCHOR Get All Reserv Wisata Outbond
+const getAllReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   try {
     const allReserv = await reservWisataModel.find();
     return res.status(200).json({ data: allReserv });
@@ -12,8 +12,8 @@ const getAllReservWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// ANCHOR Get One Reserv Wisata
-const getOneReservWisata = expressAsyncHandler(async (req, res) => {
+// ANCHOR Get One Reserv Wisata Outbond
+const getOneReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const oneReserv = await reservWisataModel.find(id).populate({
@@ -31,7 +31,7 @@ const getOneReservWisata = expressAsyncHandler(async (req, res) => {
 });
 
 // ANCHOR Create New Reserv Wisata
-const createReservWisata = expressAsyncHandler(async (req, res) => {
+const createReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   const {
       nama,
       email,
@@ -68,8 +68,8 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// ANCHOR Delete One Reserv Wisata
-const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
+// ANCHOR Delete One Reserv Wisata Outbond
+const deleteOneReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservWisataModel.findByIdAndDelete(id);
@@ -84,8 +84,8 @@ const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
-// ANCHOR Update One Reserv Wisata
-const updateOneReservWisata = expressAsyncHandler(async (req, res) => {
+// ANCHOR Update One Reserv Wisata Outbond
+const updateOneReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   const {
       jumlahPeserta,
@@ -123,9 +123,9 @@ const updateOneReservWisata = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR EXPORT MODULE
 module.exports = {
-  getAllReservWisata,
-  getOneReservWisata,
-  createReservWisata,
-  deleteOneReservWisata,
-  updateOneReservWisata,
+  createReservWisataOutbond,
+  deleteOneReservWisataOutbond,
+  getAllReservWisataOutbond,
+  getOneReservWisataOutbond,
+  updateOneReservWisataOutbond,
 };

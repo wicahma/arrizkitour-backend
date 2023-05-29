@@ -6,6 +6,7 @@ const {
   createReservWisataValidator,
   getOneReservWisataValidator,
   deleteOneReservWisataValidator,
+  updateOneReservWisataValidator,
 } = require("./validator/reservWisataValidator");
 
 router
@@ -19,6 +20,11 @@ router
     authJWT,
     deleteOneReservWisataValidator,
     reservRoute.deleteOneReservWisata
+  )
+  .put(
+    authJWT,
+    updateOneReservWisataValidator,
+    reservRoute.updateOneReservWisata
   );
 
 module.exports = router;

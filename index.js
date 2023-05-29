@@ -25,6 +25,7 @@ app.use(`${mainRoute}wisata`, require("./src/routes/v1/wisataRoute"));
 app.use(`${mainRoute}outbond`, require("./src/routes/v1/wisataOutbondRoute"));
 app.use(`${mainRoute}res-car`, require("./src/routes/v1/reservCarRoute"));
 app.use(`${mainRoute}res-wisata`, require("./src/routes/v1/reservWisataRoute"));
+app.use(`${mainRoute}res-outbond`, require("./src/routes/v1/reservWisataOutbondRoute"));
 app.use(`${mainRoute}user`, require("./src/routes/v1/userRoute"));
 
 app.use(errorHandler);
