@@ -53,6 +53,7 @@ const ReservCustomWisataSchema = new Schema({
   harga: {
     type: String,
     required: true,
+    default: 0,
     maxlength: 300,
   },
   pesananTambahan: {

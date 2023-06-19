@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { multers } = require("./src/middlewares/multer");
 const mainRoute = "/api/v1/";
 require("dotenv").config();
 const MongoDB = require("./src/config/db");
@@ -26,6 +25,7 @@ app.use(`${mainRoute}outbond`, require("./src/routes/v1/wisataOutbondRoute"));
 app.use(`${mainRoute}res-car`, require("./src/routes/v1/reservCarRoute"));
 app.use(`${mainRoute}res-wisata`, require("./src/routes/v1/reservWisataRoute"));
 app.use(`${mainRoute}res-outbond`, require("./src/routes/v1/reservWisataOutbondRoute"));
+app.use(`${mainRoute}res-custom`, require("./src/routes/v1/reservCustomWisata"));
 app.use(`${mainRoute}user`, require("./src/routes/v1/userRoute"));
 
 app.use(errorHandler);
