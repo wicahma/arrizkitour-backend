@@ -36,13 +36,6 @@ exports.getOnePaketWisataOutbondValidator = [
     .withMessage("ID is Required!")
     .isMongoId()
     .withMessage("Invalid ID!"),
-  param("orang")
-    .exists()
-    .withMessage("Orang is Required!")
-    .isNumeric()
-    .withMessage("Orang must be a number!")
-    .isLength({ min: 1, max: 2 })
-    .withMessage("Orang must be at least 1 and under 2 characters long!"),
 ];
 
 exports.updateImageWisataOutbondValidator = [

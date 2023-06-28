@@ -10,7 +10,7 @@ const {
 
 router
   .route("/")
-  .get(authJWT, reservRoute.getAllreservCustomWisata)
+  .get(reservRoute.getAllreservCustomWisata)
   .post(
     createReservWisataCustomValidation,
     reservRoute.createreservCustomWisata

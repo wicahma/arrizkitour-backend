@@ -6,7 +6,7 @@ const { default: mongoose } = require("mongoose");
 // ANCHOR Get All Reserv Wisata
 const getAllReservWisata = expressAsyncHandler(async (req, res) => {
   try {
-    const allReserv = await reservWisataModel.find();
+    const allReserv = await reservWisataModel.find({ jenisWisata: "wisata" });
     return res.status(200).json({ data: allReserv });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -130,7 +130,9 @@ const deleteOneReservWisata = expressAsyncHandler(async (req, res) => {
       res.status(404);
       throw new Error("Data tidak ditemukan");
     }
-    res.status(200).json({ messages: "Data Berhasil dihapus." });
+    res
+      .status(200)
+      .json({ message: "Data Berhasil dihapus", data: deletedReserv });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

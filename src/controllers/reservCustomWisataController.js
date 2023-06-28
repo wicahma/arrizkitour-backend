@@ -40,11 +40,11 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
       nama,
       email,
       nomorTelepon,
-      jumlahPeserta,
+      jumlahOrang,
       tanggalReservasi,
       waktuJemput,
       lokasiAntar,
-      fasilitasPilihan,
+      fasilitas,
       armada,
       lokasiJemput,
       pesananTambahan,
@@ -53,13 +53,13 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
       namaReservant: nama,
       phoneNumber: nomorTelepon,
       email: email,
-      jumlahPeserta: jumlahPeserta,
+      jumlahPeserta: jumlahOrang,
       tanggalReservasi: tanggalReservasi,
       waktuJemput: waktuJemput,
       lokasiJemput: lokasiJemput,
       lokasiAntar: lokasiAntar,
       armada: armada,
-      fasilitasPilihan: fasilitasPilihan,
+      fasilitasPilihan: fasilitas,
       pesananTambahan: pesananTambahan,
     };
 
@@ -78,24 +78,24 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
 
 const updateReservCustomWisata = expressAsyncHandler(async (req, res) => {
   const {
-      jumlahPeserta,
+      jumlahOrang,
       tanggalReservasi,
       waktuJemput,
       lokasiAntar,
-      fasilitasPilihan,
+      fasilitas,
       armada,
       lokasiJemput,
       pesananTambahan,
       harga,
     } = req.body,
     newReservData = {
-      jumlahPeserta: jumlahPeserta,
+      jumlahPeserta: jumlahOrang,
       tanggalReservasi: tanggalReservasi,
       waktuJemput: waktuJemput,
       lokasiJemput: lokasiJemput,
       lokasiAntar: lokasiAntar,
       armada: armada,
-      fasilitasPilihan: fasilitasPilihan,
+      fasilitasPilihan: fasilitas,
       pesananTambahan: pesananTambahan,
       harga: harga,
     },
@@ -117,7 +117,7 @@ const updateReservCustomWisata = expressAsyncHandler(async (req, res) => {
 
     return res.status(201).json({
       status: "Updated!",
-      messages: "Data succesfully updated!",
+      message: "Data succesfully updated!",
       data: savedReserv,
     });
   } catch (err) {
@@ -131,19 +131,17 @@ const deleteOnereservCustomWisata = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservCustomWisata.findByIdAndDelete(id);
-    
+
     if (!deletedReserv) {
       res.status(404);
       throw new Error("Data tidak ditemukan.");
     }
 
-    res
-      .status(200)
-      .json({
-        status: "Deleted!",
-        messages: "Data Berhasil dihapus!",
-        data: deletedReserv,
-      });
+    res.status(200).json({
+      status: "Deleted!",
+      message: "Data Berhasil dihapus!",
+      data: deletedReserv,
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

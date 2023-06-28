@@ -1,8 +1,9 @@
 const { model } = require("mongoose");
 const reservCar = require("../models/reservCarModel");
+const expressAsyncHandler = require("express-async-handler");
 
 // ANCHOR Get All Reserv Car
-const getAllReservCar = async (req, res) => {
+const getAllReservCar = expressAsyncHandler(async (req, res) => {
   try {
     const allReserv = await reservCar.find().populate({
       path: "unitId",
@@ -12,10 +13,10 @@ const getAllReservCar = async (req, res) => {
     if (!res.status) res.status(500);
     throw new Error(err);
   }
-};
+});
 
 // ANCHOR Get One Reserv Car
-const getOneReservCar = async (req, res) => {
+const getOneReservCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const oneReserv = await reservCar.findById(id).populate({
@@ -30,10 +31,10 @@ const getOneReservCar = async (req, res) => {
     if (!res.status) res.status(500);
     throw new Error(err);
   }
-};
+});
 
 // ANCHOR Create New Reserv Car
-const createNewReservCar = async (req, res) => {
+const createNewReservCar = expressAsyncHandler(async (req, res) => {
   const {
       nama,
       email,
@@ -66,10 +67,36 @@ const createNewReservCar = async (req, res) => {
     if (!res.status) res.status(500);
     throw new Error(err);
   }
-};
+});
+
+// ANCHOR Update One Reserv Car
+const updateOneReservCar = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { tanggalReservasi, waktuAntar, lokasiAntar, pesananTambahan } =
+    req.body;
+
+  try {
+    const updatedReserv = await reservCar.findByIdAndUpdate(id, {
+      tanggalReservasi: tanggalReservasi,
+      waktuAntar: waktuAntar,
+      lokasiAntar: lokasiAntar,
+      pesananTambahan: pesananTambahan,
+    });
+
+    if (!updatedReserv) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan.");
+    }
+
+    res.status(200).json({ message: "Data Berhasil diupdate" });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
 
 // ANCHOR Delete One Reserv Car
-const deleteOneReservCar = async (req, res) => {
+const deleteOneReservCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   try {
     const deletedReserv = await reservCar.findByIdAndDelete(id);
@@ -77,17 +104,20 @@ const deleteOneReservCar = async (req, res) => {
       res.status(404).json({ error: "Data tidak ditemukan." });
       return;
     }
-    res.json("Data Berhasil dihapus.");
+    res
+      .status(200)
+      .json({ message: "Data Berhasil dihapus", data: deletedReserv });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
   }
-};
+});
 
 // ANCHOR EXPORT MODULE
 module.exports = {
   getAllReservCar,
   getOneReservCar,
   createNewReservCar,
+  updateOneReservCar,
   deleteOneReservCar,
 };

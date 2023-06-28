@@ -75,6 +75,46 @@ const getOneWisata = expressAsyncHandler(async (req, res) => {
   }
 });
 
+// ANCHOR Get One Paket Wisata
+const getOnePaketWisata = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const ObjectID = mongoose.Types.ObjectId(id);
+
+  const isError = validationResult(req);
+  if (!isError.isEmpty()) {
+    res.status(400);
+    throw {
+      name: "Validation Error",
+      message: isError.errors[0].msg,
+      stack: isError.errors,
+    };
+  }
+
+  try {
+    const findOnePaketWisata = await wisata.aggregate([
+      {
+        $unwind: {
+          path: "$jenisPaket",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $match: {
+          "jenisPaket._id": ObjectID,
+        },
+      },
+    ]);
+    if (!findOnePaketWisata) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan");
+    }
+    res.status(200).json({ data: findOnePaketWisata });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
 // ANCHOR Get One Paket Wisata + Pax
 // !(GOD DAYM THIS IS SO COOL, MONGODB IS JUST ANOTHER LEVEL OF DATABASE)
 
@@ -313,6 +353,7 @@ const deleteOneWisata = expressAsyncHandler(async (req, res) => {
 module.exports = {
   getAllWisata,
   getOneWisata,
+  getOnePaketWisata,
   getOnePaketWisataPax,
   createNewWisata,
   updateOneWisata,

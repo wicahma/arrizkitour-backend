@@ -6,7 +6,7 @@ const wisataOutbond = require("../models/wisataOutbond");
 // ANCHOR Get All Reserv Wisata Outbond
 const getAllReservWisataOutbond = expressAsyncHandler(async (req, res) => {
   try {
-    const allReserv = await reservWisataModel.find();
+    const allReserv = await reservWisataModel.find({ jenisWisata: "outbond" });
     return res.status(200).json({ data: allReserv });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -124,7 +124,7 @@ const deleteOneReservWisataOutbond = expressAsyncHandler(async (req, res) => {
     }
     res.status(200).json({
       statue: "Deleted!",
-      messages: "Data Berhasil dihapus.",
+      message: "Data Berhasil dihapus.",
       data: deletedReserv,
     });
   } catch (err) {

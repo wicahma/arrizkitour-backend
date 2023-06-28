@@ -20,7 +20,7 @@ exports.createReservWisataCustomValidation = [
   body("nama").exists().withMessage("Nama is Required!"),
   body("email").exists().withMessage("Email is Required!"),
   body("nomorTelepon").exists().withMessage("Nomor Telepon is Required!"),
-  body("jumlahPeserta").exists().withMessage("Jumlah Peserta is Required!"),
+  body("jumlahOrang").exists().withMessage("Jumlah Peserta is Required!"),
   body("tanggalReservasi")
     .exists()
     .withMessage("Tanggal Reservasi is Required!"),
@@ -28,7 +28,7 @@ exports.createReservWisataCustomValidation = [
   body("lokasiJemput").exists().withMessage("Lokasi Jemput is Required!"),
   body("pesananTambahan").exists().withMessage("Pesanan Tambahan is Required!"),
   body("lokasiAntar").exists().withMessage("Lokasi Antar is Required!"),
-  body("fasilitasPilihan")
+  body("fasilitas")
     .exists()
     .withMessage("Fasilitas Pilihan is Required!"),
   body("armada").exists().withMessage("Armada is Required!"),

@@ -11,7 +11,7 @@ const {
 
 router
   .route("/")
-  .get(authJWT, reservRoute.getAllReservWisataOutbond)
+  .get(reservRoute.getAllReservWisataOutbond)
   .post(
     createReservWisataOutbondValidator,
     reservRoute.createReservWisataOutbond

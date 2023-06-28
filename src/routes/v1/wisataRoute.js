@@ -38,4 +38,6 @@ router
     wisataRoute.getOnePaketWisataPax
   );
 
+router.route("/paket/:id").get(authJWT, wisataRoute.getOnePaketWisata);
+
 module.exports = router;

@@ -11,11 +11,7 @@ const {
 router
   .route("/")
   .get(reservCarController.getAllReservCar)
-  .post(
-    authJWT,
-    createNewReservCarValidator,
-    reservCarController.createNewReservCar
-  );
+  .post(createNewReservCarValidator, reservCarController.createNewReservCar);
 router
   .route("/:id")
   .get(authJWT, getOneReservCarValidator, reservCarController.getOneReservCar)
@@ -23,6 +19,7 @@ router
     authJWT,
     deleteOneReservCarValidator,
     reservCarController.deleteOneReservCar
-  );
+  )
+  .put(authJWT, reservCarController.updateOneReservCar);
 
 module.exports = router;

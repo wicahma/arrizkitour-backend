@@ -12,10 +12,10 @@ const {
 router
   .route("/")
   .get(reservRoute.getAllReservWisata)
-  .post(authJWT, createReservWisataValidator, reservRoute.createReservWisata);
+  .post(createReservWisataValidator, reservRoute.createReservWisata);
 router
   .route("/:id")
-  .get(authJWT, getOneReservWisataValidator, reservRoute.getOneReservWisata)
+  .get(getOneReservWisataValidator, reservRoute.getOneReservWisata)
   .delete(
     authJWT,
     deleteOneReservWisataValidator,
