@@ -198,7 +198,7 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
   const updateWisataData = {
     fasiltas: req.body.fasilitas,
     namaPaket: req.body.nama,
-    jenisPaket: req.body.paketWisata,
+    jenisPaket: req.body.jenisPaket,
     status: req.body.status,
   };
 
@@ -225,7 +225,9 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
       res.status(404).json({ error: "Data tidak ditemukan" });
       return;
     }
-    res.status(200).json({ data: updateWisata });
+    res
+      .status(200)
+      .json({ message: "Data succesfully updated!", data: updateWisata });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

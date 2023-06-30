@@ -38,10 +38,22 @@ const getOneReservWisataOutbond = expressAsyncHandler(async (req, res) => {
       (item) => item._id.toString() === oneReserv.paketWisataId.toString()
     );
 
-    Outbond.jenisPaket = paket;
+    Outbond.jenisPaket = paket[0];
     oneReserv.paketWisataId = Outbond;
 
-    return res.status(200).json({ data: oneReserv });
+    return res.status(200).json({
+      data: {
+        ...oneReserv._doc,
+        paketWisataId: {
+          _id: oneReserv._doc.paketWisataId._id,
+          namaTempat: oneReserv._doc.paketWisataId.namaTempat,
+          jenisPaket: {
+            ...paket[0]._doc,
+            fasilitas: paket[0]._doc.fasilitas.toString(),
+          },
+        },
+      },
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

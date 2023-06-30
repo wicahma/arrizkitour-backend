@@ -34,7 +34,7 @@ const outbondSchema = new Schema(
     keterangan: {
       type: String,
       required: true,
-      maxlength: [100, "Keterangan harus kurang dari 100 karakter kata!"],
+      maxlength: [2000, "Keterangan harus kurang dari 2000 karakter kata!"],
     },
     namaTempat: {
       type: String,

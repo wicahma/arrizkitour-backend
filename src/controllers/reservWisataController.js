@@ -37,10 +37,24 @@ const getOneReservWisata = expressAsyncHandler(async (req, res) => {
       (item) => item._id.toString() === oneReserv.paketWisataId.toString()
     );
 
-    Wisata.jenisPaket = paket;
+    Wisata.jenisPaket = paket[0];
     oneReserv.paketWisataId = Wisata;
-
-    return res.status(200).json({ data: oneReserv });
+    // oneReserv._doc.
+    return res.status(200).json({
+      data: {
+        ...oneReserv._doc,
+        paketWisataId: {
+          _id: oneReserv._doc.paketWisataId._id,
+          namaPaket: oneReserv._doc.paketWisataId.namaPaket,
+          fasilitas: oneReserv._doc.paketWisataId.fasilitas,
+          jenisPaket: {
+            _id: paket[0]._doc._id,
+            rundown: paket[0]._doc.rundown.toString(),
+            tempatWisata: paket[0]._doc.tempatWisata.toString(),
+          },
+        },
+      },
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
