@@ -11,7 +11,7 @@ const transporter = mailer.createTransport({
   },
 });
 
-exports.sendEmail = async ({ email, data, identifier }) => {
+exports.sendEmail = async ({ email, data, identifier, type }) => {
   console.group("Mailer is starting...");
   console.log("-- email", email);
   console.log("-- data", data);
@@ -21,9 +21,9 @@ exports.sendEmail = async ({ email, data, identifier }) => {
 
     const reader = fs.readFileSync(
       __dirname +
-        `/../html/orders/${identifier
+        `/../html/${type}/${identifier
           .replace(/\s+/g, "-")
-          .toLowerCase()}-order.html`,
+          .toLowerCase()}-${type.slice(0, -1)}.html`,
       {
         encoding: "utf-8",
       }

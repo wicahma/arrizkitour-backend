@@ -70,6 +70,7 @@ app.use(`${mainRoute}email-test`, async (req, res) => {
       updatedAt: "2023-06-28T12:04:12.066Z",
     },
     identifier: "Mobil",
+    type: "orders",
   };
 
   const private = {
@@ -109,6 +110,7 @@ app.use(`${mainRoute}email-test`, async (req, res) => {
       __v: 0,
     },
     identifier: "Private Wisata",
+    type: "invoices",
   };
 
   const outbond = {
@@ -147,6 +149,7 @@ app.use(`${mainRoute}email-test`, async (req, res) => {
       __v: 0,
     },
     identifier: "Outbond",
+    type: "invoices",
   };
 
   const custom_after = {
@@ -169,6 +172,7 @@ app.use(`${mainRoute}email-test`, async (req, res) => {
       __v: 0,
     },
     identifier: "Custom Wisata",
+    type: "orders",
   };
   const custom_before = {
     data: {
@@ -190,10 +194,11 @@ app.use(`${mainRoute}email-test`, async (req, res) => {
       __v: 0,
     },
     identifier: "Custom Wisata in Check",
+    type: "orders",
   };
   const email = await sendEmail({
     email: "masterteguh3@gmail.com",
-    ...custom_after,
+    ...private,
   });
   res.status(200).json({ message: "Email Sent!", data: email });
 });

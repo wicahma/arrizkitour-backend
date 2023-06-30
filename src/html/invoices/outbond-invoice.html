@@ -59,15 +59,26 @@
           <h3
             style="
               text-align: center;
-              font-weight: 400;
-              font-size: 1.3rem;
+              font-size: 1.1rem;
+              font-weight: 300;
               margin: 0;
               margin-top: 10px;
               margin-bottom: 5px;
             "
           >
-            Pemesanan Berhasil
+            Pembayaran Berhasil
           </h3>
+          <h2
+            style="
+              text-align: center;
+              font-size: 2rem;
+              font-weight: 600;
+              margin: 0;
+              margin-bottom: 10px;
+            "
+          >
+            {{harga}}
+          </h2>
         </div>
         <!-- //NOTE - Main Section -->
         <div
@@ -83,7 +94,7 @@
           <p style="margin: 0">
             Terima kasih telah mempercayai
             <b style="font-weight: 600">Arrizki Tour</b> sebagai teman
-            perjalanan anda, berikut kami lampirkan detail pemesanan anda,
+            perjalanan anda, berikut kami lampirkan invoice anda,
           </p>
         </div>
         <!-- //NOTE - Pemesanan Section -->
@@ -157,60 +168,33 @@
                 </td>
               </tr>
               <tr style="font-size: 14px">
-                <td style="color: #7d7c7c; border-bottom: 1px solid #c2c2c2">
-                  Jumlah Peserta
-                </td>
-                <td style="text-align: end; border-bottom: 1px solid #c2c2c2">
-                  {{jumlahPeserta}}
-                </td>
-              </tr>
-
-              <tr style="font-size: 1.2rem">
-                <td style="padding: 5px 0 10px 0; font-weight: 500">
-                  Harga total
-                </td>
-                <td style="padding: 5px 0 10px 0; text-align: end">
-                  {{harga}}
-                </td>
+                <td style="color: #7d7c7c">Jumlah Peserta</td>
+                <td style="text-align: end">{{jumlahPeserta}}</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div
+        <a
           style="
+            display: inline-block;
             box-sizing: border-box;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            border-radius: 8px 8px 20px 20px;
-            background-color: rgb(255, 255, 255);
+            text-align: center;
+            background-color: #1aaa4d;
+            color: #fff;
+            width: 100%;
+            text-transform: uppercase;
+            margin: 5px 0;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            border-radius: 15px;
+            text-decoration: none;
+            transition-duration: 200ms;
           "
+          target="_blank"
+          href="anjas"
         >
-          <p style="margin: 0">
-            Tahap selanjutnya yang harus anda lakukan adalah pembayaran,
-            silahkan lakukan pembayaran anda sesegera mungkin agar tidak terjadi
-            pembatalan transaksi.
-          </p>
-          <a
-            href="https://arrizkitour.com/payment"
-            target="_blank"
-            style="
-              display: inline-block;
-              box-sizing: border-box;
-              text-align: center;
-              background-color: #1aaa4d;
-              color: #fff;
-              width: 100%;
-              text-transform: uppercase;
-              margin: 0;
-              margin-top: 10px;
-              padding: 10px 20px;
-              border-radius: 10px;
-              text-decoration: none;
-              transition-duration: 200ms;
-            "
-            >Bayar Sekarang</a
-          >
-        </div>
+          Unduh invoice
+        </a>
         <!-- //NOTE - Footer Email -->
         <div
           style="
