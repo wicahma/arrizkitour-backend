@@ -324,7 +324,12 @@ const sendInvoice = expressAsyncHandler(async (req, res) => {
       type: "invoices",
     });
 
-    return res.status(200).json({ message: "Email sent!", mailer: email });
+    res
+      .status(200)
+      .json({
+        message: `Invoice berhasil dikirim ke ${reserv.email}`,
+        mailer: email,
+      });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

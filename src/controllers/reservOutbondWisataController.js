@@ -308,9 +308,9 @@ const sendInvoice = expressAsyncHandler(async (req, res) => {
       identifier: "Outbond",
       type: "invoices",
     });
-    return res.status(200).json({
+    res.status(200).json({
       status: "Success",
-      message: "Invoice berhasil dikirim",
+      message: `Invoice berhasil dikirim ke ${reserv.email}`,
       data: reserv,
       mailer: email,
     });
