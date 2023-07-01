@@ -36,8 +36,13 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
       from: "Arrizki Tour <arrizkitour@gmail.com>",
       replyTo: "arrizkitour@gmail.com",
       to: email,
-      subject: `Order ${identifier}`,
-      html: template(data),
+      subject: `${
+        type.toString().charAt(0).toUpperCase() + type.toString().slice(1, -1)
+      } ${identifier}`,
+      html: template(data, {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true,
+      }),
       attachments: [
         {
           filename: "check.png",
@@ -69,4 +74,21 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
     console.log(err);
     return err;
   }
+};
+
+exports.rupiah = (angka) => {
+  intl = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  });
+  return intl.format(angka);
+};
+exports.tanggal = (date) => {
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Date(date).toLocaleDateString("id-ID", options);
 };

@@ -21,5 +21,6 @@ router
     reservCarController.deleteOneReservCar
   )
   .put(authJWT, reservCarController.updateOneReservCar);
+router.route("/invoice/:id").get(authJWT, reservCarController.sendInvoice);
 
 module.exports = router;

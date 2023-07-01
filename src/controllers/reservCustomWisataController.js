@@ -1,5 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const reservCustomWisata = require("../models/reservCustomWisata");
+const { sendEmail, rupiah, tanggal } = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllreservCustomWisata = expressAsyncHandler(async (req, res) => {
@@ -28,6 +29,31 @@ const getOnereservCustomWisata = expressAsyncHandler(async (req, res) => {
     return res
       .status(200)
       .json({ status: "Success", message: "Data Founded!", data: oneReserv });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+const sendInvoice = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const oneReserv = await reservCustomWisata.findById(id);
+    if (!oneReserv) {
+      res.status(404).json({ error: "Data tidak ditemukan." });
+      return;
+    }
+    const email = await sendEmail({
+      email: oneReserv.email,
+      data: {
+        ...oneReserv._doc,
+        harga: rupiah(Number(oneReserv._doc.harga)),
+        tanggalReservasi: tanggal(oneReserv._doc.tanggalReservasi),
+      },
+      identifier: "Custom Wisata",
+      type: "invoices",
+    });
+    res.status(200).json({ data: oneReserv, mailer: email });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -68,8 +94,17 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
       ...newReservData,
     });
     const savedReserv = await newReserv.save();
-
-    return res.status(201).json({ data: savedReserv });
+    const email = await sendEmail({
+      email: savedReserv.email,
+      data: {
+        ...savedReserv._doc,
+        harga: rupiah(Number(savedReserv._doc.harga)),
+        tanggalReservasi: tanggal(savedReserv._doc.tanggalReservasi),
+      },
+      identifier: "Custom Wisata in Check",
+      type: "orders",
+    });
+    return res.status(201).json({ data: savedReserv, mailer: email });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -115,10 +150,22 @@ const updateReservCustomWisata = expressAsyncHandler(async (req, res) => {
       throw new Error("Data tidak ditemukan.");
     }
 
+    const email = await sendEmail({
+      email: savedReserv.email,
+      data: {
+        ...savedReserv._doc,
+        harga: rupiah(Number(savedReserv._doc.harga)),
+        tanggalReservasi: tanggal(savedReserv._doc.tanggalReservasi),
+      },
+      identifier: "Custom Wisata",
+      type: "orders",
+    });
+
     return res.status(201).json({
       status: "Updated!",
       message: "Data succesfully updated!",
       data: savedReserv,
+      mailer: email,
     });
   } catch (err) {
     if (!res.status) res.status(500);
@@ -152,6 +199,7 @@ const deleteOnereservCustomWisata = expressAsyncHandler(async (req, res) => {
 module.exports = {
   getAllreservCustomWisata,
   getOnereservCustomWisata,
+  sendInvoice,
   createreservCustomWisata,
   deleteOnereservCustomWisata,
   updateReservCustomWisata,

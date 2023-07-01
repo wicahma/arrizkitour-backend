@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const reservWisataModel = require("../models/reservWisataModel");
 const wisataModel = require("../models/wisataModel");
 const { default: mongoose } = require("mongoose");
+const { tanggal, rupiah, sendEmail } = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllReservWisata = expressAsyncHandler(async (req, res) => {
@@ -128,7 +129,27 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
 
     const savedReserv = await newReserv.save();
 
-    return res.status(201).json({ data: savedReserv });
+    const emails = await sendEmail({
+      email: savedReserv.email,
+      data: {
+        ...savedReserv._doc,
+        tanggalMulai: tanggal(savedReserv._doc.tanggalMulai),
+        harga: rupiah(savedReserv._doc.harga),
+        paketWisataId: {
+          _id: paketWisata[0]._id,
+          namaPaket: paketWisata[0].namaPaket,
+          fasilitas: paketWisata[0].fasilitas,
+          jenisPaket: {
+            rundown: paketWisata[0].jenisPaket.rundown.toString(),
+            tempatWisata: paketWisata[0].jenisPaket.tempatWisata.toString(),
+          },
+        },
+      },
+      identifier: "Private Wisata",
+      type: "orders",
+    });
+
+    return res.status(201).json({ data: savedReserv, mailer: emails });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -166,10 +187,6 @@ const updateOneReservWisata = expressAsyncHandler(async (req, res) => {
 
   try {
     const isReservExist = await reservWisataModel.findById(id);
-
-    // const ObjectID = mongoose.Types.ObjectId(
-    //   isReservExist.paketWisataId.toString()
-    // );
 
     const paketWisata = await wisataModel.aggregate([
       {
@@ -223,9 +240,91 @@ const updateOneReservWisata = expressAsyncHandler(async (req, res) => {
       throw new Error("Data tidak ditemukan");
     }
 
-    return res
-      .status(200)
-      .json({ message: "Data succesfully updated!", data: updatedReserv });
+    const email = await sendEmail({
+      email: updatedReserv.email,
+      data: {
+        ...updatedReserv._doc,
+        tanggalMulai: tanggal(updatedReserv._doc.tanggalMulai),
+        harga: rupiah(updatedReserv._doc.harga),
+        paketWisataId: {
+          _id: paketWisata[0]._id,
+          namaPaket: paketWisata[0].namaPaket,
+          fasilitas: paketWisata[0].fasilitas,
+          jenisPaket: {
+            rundown: paketWisata[0].jenisPaket.rundown.toString(),
+            tempatWisata: paketWisata[0].jenisPaket.tempatWisata.toString(),
+          },
+        },
+      },
+      identifier: "Private Wisata",
+      type: "orders",
+    });
+
+    return res.status(200).json({
+      message: "Data succesfully updated!",
+      data: updatedReserv,
+      mailer: email,
+    });
+  } catch (err) {
+    if (!res.status) res.status(500);
+    throw new Error(err);
+  }
+});
+
+const sendInvoice = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const reserv = await reservWisataModel.findById(id);
+
+    if (!reserv) {
+      res.status(404);
+      throw new Error("Data tidak ditemukan");
+    }
+
+    const paketWisata = await wisataModel.aggregate([
+      {
+        $unwind: {
+          path: "$jenisPaket",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $unwind: {
+          path: "$jenisPaket.pax",
+          preserveNullAndEmptyArrays: false,
+        },
+      },
+      {
+        $match: {
+          $and: [
+            { "jenisPaket._id": reserv.paketWisataId },
+            { "jenisPaket.pax.jumlah": Number(reserv.jumlahPeserta) },
+          ],
+        },
+      },
+    ]);
+
+    const email = await sendEmail({
+      email: reserv.email,
+      data: {
+        ...reserv._doc,
+        tanggalMulai: tanggal(reserv._doc.tanggalMulai),
+        harga: rupiah(reserv._doc.harga),
+        paketWisataId: {
+          _id: paketWisata[0]._id,
+          namaPaket: paketWisata[0].namaPaket,
+          fasilitas: paketWisata[0].fasilitas,
+          jenisPaket: {
+            rundown: paketWisata[0].jenisPaket.rundown.toString(),
+            tempatWisata: paketWisata[0].jenisPaket.tempatWisata.toString(),
+          },
+        },
+      },
+      identifier: "Private Wisata",
+      type: "invoices",
+    });
+
+    return res.status(200).json({ message: "Email sent!", mailer: email });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -234,6 +333,7 @@ const updateOneReservWisata = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR EXPORT MODULE
 module.exports = {
+  sendInvoice,
   getAllReservWisata,
   getOneReservWisata,
   createReservWisata,

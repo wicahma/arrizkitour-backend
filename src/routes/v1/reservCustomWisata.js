@@ -30,4 +30,6 @@ router
   )
   .put(authJWT, reservRoute.updateReservCustomWisata);
 
+router.route("/invoice/:id").get(authJWT, reservRoute.sendInvoice);
+
 module.exports = router;

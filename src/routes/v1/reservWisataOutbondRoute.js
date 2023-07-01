@@ -33,5 +33,6 @@ router
     updateOneReservWisataOutbondValidator,
     reservRoute.updateOneReservWisataOutbond
   );
+router.route("/invoice/:id").get(authJWT, reservRoute.sendInvoice);
 
 module.exports = router;
