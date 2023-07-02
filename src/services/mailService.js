@@ -5,8 +5,8 @@ const handlebars = require("handlebars");
 const transporter = mailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.MAIL,
     pass: process.env.MAIL_PASS,
@@ -35,7 +35,7 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
     const template = handlebars.compile(reader);
 
     const mailOptions = {
-      from: "Arrizki Tour <arrizkitour@gmail.com>",
+      from: "Arrizki Tour <admin@arrizkitour.com>",
       replyTo: "arrizkitour@gmail.com",
       to: email,
       subject: `${
@@ -74,7 +74,7 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
     return mailer;
   } catch (err) {
     console.log(err);
-    return err;
+    throw new Error(err);
   }
 };
 

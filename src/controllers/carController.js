@@ -1,11 +1,6 @@
 const { validationResult } = require("express-validator");
 const { deleteFile } = require("../middlewares/multer.js");
 const car = require("../models/carModel.js");
-const {
-  uploadImageToDrive,
-  deleteImageFromDrive,
-  getAuthenticate,
-} = require("../services/googleDriveServices.js");
 const expressAsyncHandler = require("express-async-handler");
 require("dotenv").config();
 
@@ -46,7 +41,6 @@ const getOneCar = expressAsyncHandler(async (req, res) => {
 
 // ANCHOR - CREATE NEW CAR
 const createNewCar = expressAsyncHandler(async (req, res) => {
-  // const auth = getAuthenticate();
   const { nama, harga, seat, fasilitas } = req.body;
   console.log(req.file);
 
@@ -66,13 +60,6 @@ const createNewCar = expressAsyncHandler(async (req, res) => {
       res.status(400);
       throw new Error("File tidak terinput!");
     }
-
-    // const response = await uploadImageToDrive(
-    //   req.file,
-    //   auth,
-    //   process.env.CAR_FOLDER_ID
-    // );
-    // newCar.imageId = response.data.id;
 
     const newCar = await car.create({
       unitName: nama,
@@ -143,7 +130,6 @@ const updateOneCar = expressAsyncHandler(async (req, res) => {
 
 const updateImageCar = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
-  // const auth = getAuthenticate();
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);
@@ -203,8 +189,6 @@ const deleteOneCar = expressAsyncHandler(async (req, res) => {
   }
 
   try {
-    // const auth = getAuthenticate();
-
     const deletedCar = await car.findByIdAndDelete(id);
     if (!deletedCar) {
       res.status(404);
@@ -215,15 +199,11 @@ const deleteOneCar = expressAsyncHandler(async (req, res) => {
       `${__dirname}/../../public/images/${deletedCar.imageId}`
     );
 
-    // await deleteImageFromDrive(deletedCar.imageId, auth);
-
-    res
-      .status(200)
-      .json({
-        message: "Data berhasil dihapus!",
-        imageStatus: deletedImage,
-        data: { ...deletedCar },
-      });
+    res.status(200).json({
+      message: "Data berhasil dihapus!",
+      imageStatus: deletedImage,
+      data: { ...deletedCar },
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);

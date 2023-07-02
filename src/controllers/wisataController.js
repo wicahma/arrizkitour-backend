@@ -238,7 +238,6 @@ const updateOneWisata = expressAsyncHandler(async (req, res) => {
 
 const updateOneWisataImage = expressAsyncHandler(async (req, res) => {
   const { idPaket } = req.params;
-  // const auth = getAuthenticate();
   const isError = validationResult(req);
   if (!isError.isEmpty()) {
     res.status(400);
