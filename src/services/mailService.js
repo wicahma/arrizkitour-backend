@@ -5,6 +5,8 @@ const handlebars = require("handlebars");
 const transporter = mailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.MAIL,
     pass: process.env.MAIL_PASS,
@@ -69,7 +71,7 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
     const mailer = await transporter.sendMail(mailOptions);
     console.log("-- Email is sent!");
     console.groupEnd();
-    return mailer.response;
+    return mailer;
   } catch (err) {
     console.log(err);
     return err;
