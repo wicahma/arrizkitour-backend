@@ -1,6 +1,6 @@
 const expressAsyncHandler = require("express-async-handler");
 const reservCustomWisata = require("../models/reservCustomWisata");
-const { sendEmail, rupiah, tanggal } = require("../services/mailService");
+const { sendEmail, rupiah, tanggal, tanggalWaktu } = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllreservCustomWisata = expressAsyncHandler(async (req, res) => {
@@ -106,6 +106,7 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
         ...savedReserv._doc,
         harga: rupiah(Number(savedReserv._doc.harga)),
         tanggalReservasi: tanggal(savedReserv._doc.tanggalReservasi),
+        createdAt: tanggalWaktu(savedReserv._doc.createdAt),
       },
       identifier: "Custom Wisata in Check",
       type: "orders",

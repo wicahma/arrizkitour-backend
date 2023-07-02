@@ -1,7 +1,12 @@
 const { model } = require("mongoose");
 const reservCar = require("../models/reservCarModel");
 const expressAsyncHandler = require("express-async-handler");
-const { sendEmail, rupiah, tanggal } = require("../services/mailService");
+const {
+  sendEmail,
+  rupiah,
+  tanggal,
+  tanggalWaktu,
+} = require("../services/mailService");
 
 // ANCHOR Get All Reserv Car
 const getAllReservCar = expressAsyncHandler(async (req, res) => {
@@ -53,17 +58,16 @@ const sendInvoice = expressAsyncHandler(async (req, res) => {
           ...oneReserv._doc.unitId._doc,
           pricePerDay: rupiah(oneReserv._doc.unitId.pricePerDay),
         },
+        createdAt: tanggalWaktu(oneReserv._doc.createdAt),
       },
       identifier: "Mobil",
       type: "invoices",
     });
-    res
-      .status(200)
-      .json({
-        data: oneReserv,
-        mailer: email,
-        message: `Invoice berhasil dikirim ke ${oneReserv.email}`,
-      });
+    res.status(200).json({
+      data: oneReserv,
+      mailer: email,
+      message: `Invoice berhasil dikirim ke ${oneReserv.email}`,
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -111,6 +115,7 @@ const createNewReservCar = expressAsyncHandler(async (req, res) => {
           ...oneReserv._doc.unitId._doc,
           pricePerDay: rupiah(oneReserv._doc.unitId.pricePerDay),
         },
+        createdAt: tanggalWaktu(oneReserv._doc.createdAt),
       },
       identifier: "Mobil",
       type: "orders",

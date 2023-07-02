@@ -2,7 +2,12 @@ const expressAsyncHandler = require("express-async-handler");
 const reservWisataModel = require("../models/reservWisataModel");
 const { default: mongoose } = require("mongoose");
 const wisataOutbond = require("../models/wisataOutbond");
-const { sendEmail, tanggal, rupiah } = require("../services/mailService");
+const {
+  sendEmail,
+  tanggal,
+  rupiah,
+  tanggalWaktu,
+} = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata Outbond
 const getAllReservWisataOutbond = expressAsyncHandler(async (req, res) => {
@@ -132,6 +137,7 @@ const createReservWisataOutbond = expressAsyncHandler(async (req, res) => {
             fasilitas: paketWisata[0].jenisPaket.fasilitas.toString(),
           },
         },
+        createdAt: tanggalWaktu(savedReserv._doc.createdAt),
       },
       identifier: "Outbond",
       type: "orders",

@@ -2,7 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const reservWisataModel = require("../models/reservWisataModel");
 const wisataModel = require("../models/wisataModel");
 const { default: mongoose } = require("mongoose");
-const { tanggal, rupiah, sendEmail } = require("../services/mailService");
+const { tanggal, rupiah, sendEmail, tanggalWaktu } = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllReservWisata = expressAsyncHandler(async (req, res) => {
@@ -135,6 +135,7 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
         ...savedReserv._doc,
         tanggalMulai: tanggal(savedReserv._doc.tanggalMulai),
         harga: rupiah(savedReserv._doc.harga),
+        createdAt: tanggalWaktu(savedReserv._doc.createdAt),
         paketWisataId: {
           _id: paketWisata[0]._id,
           namaPaket: paketWisata[0].namaPaket,
