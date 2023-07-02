@@ -89,7 +89,7 @@ exports.sendEmail = async ({ email, data, identifier, type }) => {
       const mailOptionsAdmin = {
         from: "Admin - Arrizki Tour <admin@arrizkitour.com>",
         replyTo: "arrizkitour@gmail.com",
-        to: "bakwankawicoba@gmail.com",
+        to: process.env.MAIL_TOUR.toString(),
         subject: `${
           type.toString().charAt(0).toUpperCase() + type.toString().slice(1, -1)
         } ${identifier}`,
