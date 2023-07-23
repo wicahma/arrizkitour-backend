@@ -28,6 +28,12 @@ const ReservWisataSchema = new Schema(
       required: true,
       maxlength: 30,
     },
+    instagram: {
+      type: String,
+      required: false,
+      maxlength: 50,
+      default: "",
+    },
     jumlahPeserta: {
       type: Number,
       required: true,

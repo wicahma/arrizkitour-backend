@@ -18,6 +18,12 @@ const ReservCarSchema = new Schema(
       required: true,
       maxlength: 30,
     },
+    instagram: {
+      type: String,
+      required: false,
+      maxlength: 50,
+      default: "",
+    },
     tanggalReservasi: {
       type: Date,
       required: true,

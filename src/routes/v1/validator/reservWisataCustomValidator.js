@@ -27,7 +27,7 @@ exports.createReservWisataCustomValidation = [
   body("waktuJemput").exists().withMessage("Waktu Jemput is Required!"),
   body("lokasiJemput").exists().withMessage("Lokasi Jemput is Required!"),
   body("pesananTambahan").exists().withMessage("Pesanan Tambahan is Required!"),
-  body("lokasiAntar").exists().withMessage("Lokasi Antar is Required!"),
+  body("listWisata").exists().withMessage("Lokasi Antar is Required!"),
   body("fasilitas")
     .exists()
     .withMessage("Fasilitas Pilihan is Required!"),
