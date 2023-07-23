@@ -1,6 +1,11 @@
 const expressAsyncHandler = require("express-async-handler");
 const reservCustomWisata = require("../models/reservCustomWisata");
-const { sendEmail, rupiah, tanggal, tanggalWaktu } = require("../services/mailService");
+const {
+  sendEmail,
+  rupiah,
+  tanggal,
+  tanggalWaktu,
+} = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllreservCustomWisata = expressAsyncHandler(async (req, res) => {
@@ -53,13 +58,11 @@ const sendInvoice = expressAsyncHandler(async (req, res) => {
       identifier: "Custom Wisata",
       type: "invoices",
     });
-    res
-      .status(200)
-      .json({
-        data: oneReserv,
-        mailer: email,
-        message: `Invoice berhasil dikirim ke ${oneReserv.email}`,
-      });
+    res.status(200).json({
+      data: oneReserv,
+      mailer: email,
+      message: `Invoice berhasil dikirim ke ${oneReserv.email}`,
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
@@ -75,7 +78,8 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
       jumlahOrang,
       tanggalReservasi,
       waktuJemput,
-      lokasiAntar,
+      listWisata,
+      instagram, 
       fasilitas,
       armada,
       lokasiJemput,
@@ -85,11 +89,12 @@ const createreservCustomWisata = expressAsyncHandler(async (req, res) => {
       namaReservant: nama,
       phoneNumber: nomorTelepon,
       email: email,
+      instagram: instagram,
       jumlahPeserta: jumlahOrang,
       tanggalReservasi: tanggalReservasi,
       waktuJemput: waktuJemput,
       lokasiJemput: lokasiJemput,
-      lokasiAntar: lokasiAntar,
+      listWisata: listWisata,
       armada: armada,
       fasilitasPilihan: fasilitas,
       pesananTambahan: pesananTambahan,
@@ -123,7 +128,7 @@ const updateReservCustomWisata = expressAsyncHandler(async (req, res) => {
       jumlahOrang,
       tanggalReservasi,
       waktuJemput,
-      lokasiAntar,
+      listWisata,
       fasilitas,
       armada,
       lokasiJemput,
@@ -135,7 +140,7 @@ const updateReservCustomWisata = expressAsyncHandler(async (req, res) => {
       tanggalReservasi: tanggalReservasi,
       waktuJemput: waktuJemput,
       lokasiJemput: lokasiJemput,
-      lokasiAntar: lokasiAntar,
+      listWisata: listWisata,
       armada: armada,
       fasilitasPilihan: fasilitas,
       pesananTambahan: pesananTambahan,

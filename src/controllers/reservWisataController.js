@@ -2,7 +2,12 @@ const expressAsyncHandler = require("express-async-handler");
 const reservWisataModel = require("../models/reservWisataModel");
 const wisataModel = require("../models/wisataModel");
 const { default: mongoose } = require("mongoose");
-const { tanggal, rupiah, sendEmail, tanggalWaktu } = require("../services/mailService");
+const {
+  tanggal,
+  rupiah,
+  sendEmail,
+  tanggalWaktu,
+} = require("../services/mailService");
 
 // ANCHOR Get All Reserv Wisata
 const getAllReservWisata = expressAsyncHandler(async (req, res) => {
@@ -67,6 +72,7 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
   const {
     nama,
     email,
+    instagram,
     nomorTelepon,
     paketID,
     jumlahPeserta,
@@ -113,6 +119,7 @@ const createReservWisata = expressAsyncHandler(async (req, res) => {
       namaReservant: nama,
       phoneNumber: nomorTelepon,
       email: email,
+      instagram: instagram,
       paketWisataId: paketID,
       jumlahPeserta: jumlahPeserta,
       tanggalMulai: tanggalReservasi,
@@ -325,12 +332,10 @@ const sendInvoice = expressAsyncHandler(async (req, res) => {
       type: "invoices",
     });
 
-    res
-      .status(200)
-      .json({
-        message: `Invoice berhasil dikirim ke ${reserv.email}`,
-        mailer: email,
-      });
+    res.status(200).json({
+      message: `Invoice berhasil dikirim ke ${reserv.email}`,
+      mailer: email,
+    });
   } catch (err) {
     if (!res.status) res.status(500);
     throw new Error(err);
